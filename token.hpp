@@ -10,10 +10,10 @@ enum Clase {
   OPERADOR_ASIGNACION, // 2
   OPERADOR_RELACIONAL, // 3
   OPERADOR_ARITMETICO, // 4
-  SIMBOLOS_ESPECIALES, // 5
-  CONSTANTES_ENTERAS_B10, // 6
-  CONSTANTES_REALES, // 7
-  CONSTANTES_CADENA, // 8
+  SIMBOLO_ESPECIAL, // 5
+  CONSTANTE_ENTERA_B10, // 6
+  CONSTANTE_REAL, // 7
+  CONSTANTE_CADENA, // 8
   ERROR // 9
 };
 
@@ -123,7 +123,7 @@ class TokenSimboloEspecial : public Token {
   // caracter '=' en ASCii.
 
 public:
-  TokenSimboloEspecial(int pos = 0, int linea = 0, int col = 0, Clase clase = SIMBOLOS_ESPECIALES);
+  TokenSimboloEspecial(int pos = 0, int linea = 0, int col = 0, Clase clase = SIMBOLO_ESPECIAL);
   int obtenerValor() const;
   virtual void aceptar(VisitaToken &t);
 };
@@ -132,7 +132,7 @@ class TokenConstanteEntero : public Token {
   int valorConstanteEntero;
   
 public:
-  TokenConstanteEntero(int valorConstanteEntero, int pos = 0, int linea = 0, int col = 0, Clase clase = CONSTANTES_ENTERAS_B10);
+  TokenConstanteEntero(int valorConstanteEntero, int pos = 0, int linea = 0, int col = 0, Clase clase = CONSTANTE_ENTERA_B10);
   int obtenerValor() const;
   int obtenerValorConstanteEntero() const;
   virtual void aceptar(VisitaToken &t);
@@ -142,7 +142,7 @@ class TokenConstanteReal : public Token {
   double valorConstanteReal;
 
 public:
-  TokenConstanteReal(double valorConstanteReal, int pos = 0, int linea = 0, int col = 0, Clase clase = CONSTANTES_REALES);
+  TokenConstanteReal(double valorConstanteReal, int pos = 0, int linea = 0, int col = 0, Clase clase = CONSTANTE_REAL);
   int obtenerValor() const;
   double obtenerValorConstanteReal() const;
   virtual void aceptar(VisitaToken &t);
@@ -152,8 +152,21 @@ class TokenConstanteCadena : public Token {
   std::string cadenaConstante;
 
 public:
-  TokenConstanteCadena(std::string cadenaConstante, int pos = 0, int linea = 0, int col = 0, Clase clase = CONSTANTES_CADENA);
+  TokenConstanteCadena(std::string cadenaConstante, int pos = 0, int linea = 0, int col = 0, Clase clase = CONSTANTE_CADENA);
   std::string obtenerCadenaConstante() const;
+  int obtenerValor() const;
+  virtual void aceptar(VisitaToken &t);
+};
+
+enum Error {
+  SIMBOLO
+};
+
+class TokenError : public Token {
+  Error tipoDeError;
+
+  public:
+  TokenError(int pos = 0, int linea = 0, int col = 0, Clase clase = ERROR);
   int obtenerValor() const;
   virtual void aceptar(VisitaToken &t);
 };
@@ -170,4 +183,5 @@ public:
   virtual void visita(TokenConstanteEntero &t) = 0;
   virtual void visita(TokenConstanteReal &t) = 0;
   virtual void visita(TokenConstanteCadena &t) = 0;
+  virtual void visita(TokenError &t) = 0; 
 };

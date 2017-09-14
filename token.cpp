@@ -94,3 +94,9 @@ int TokenConstanteCadena::obtenerValor() const {
 }
 
 void TokenConstanteCadena::aceptar(VisitaToken &t) { t.visita(*this); }
+
+int TokenError::obtenerValor() const {
+  return 0; // IMPLEMENTAR
+}
+
+void TokenError::aceptar(VisitaToken &t) { t.visita(*this); }
