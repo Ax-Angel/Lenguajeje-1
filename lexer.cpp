@@ -37,7 +37,36 @@ void Lexer::saltarEspacioBlanco() {
 }
 
 ApuntadorAToken Lexer::leerNumero() {
+  string num;
+
+  while (isdigit(ultimoCaracter)) {
+    num += (string)ultimoCaracter;
+    leerCaracter();
+  }
+
+  if (isspace(ultimoCaracter)) {
+    return std::make_shared<TokenConstanteEntero>(std::stoi(num), posicionActual, lineaActual, columnaActual);
+  }
   
+  if (ultimoCaracter == '.') {
+    num += ".";
+    while (isdigit(ultimoCaracter)) {
+      num += (string)ultimoCaracter;
+      leerCaracter();
+    }
+  }
+  
+  if (!isspace(ultimoCaracter)) {
+    std::string mensajeError = "Símbolo no esperado: '";
+    mensajeError += ultimoCaracter + "', "
+      + posicionActual + ", "
+      + lineaActual + ", "
+      + columnaActual ".";
+    leerCaracter();
+    return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
+  }
+  
+  std::make_shared<TokenConstanteReal>(std::stod(num), posicionActual, lineaActual, columnaActual);
 }
 
 ApuntadorAToken Lexer::leerCadena() {
