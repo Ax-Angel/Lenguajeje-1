@@ -164,9 +164,10 @@ enum Error {
 
 class TokenError : public Token {
   Error tipoDeError;
-
+  std::string mensajeError;
+  
   public:
-  TokenError(int pos = 0, int linea = 0, int col = 0, Clase clase = ERROR);
+  TokenError(std::string mensajeError, int pos = 0, int linea = 0, int col = 0, Clase clase = ERROR);
   int obtenerValor() const;
   virtual void aceptar(VisitaToken &t);
 };

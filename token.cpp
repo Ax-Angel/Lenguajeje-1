@@ -95,6 +95,8 @@ int TokenConstanteCadena::obtenerValor() const {
 
 void TokenConstanteCadena::aceptar(VisitaToken &t) { t.visita(*this); }
 
+TokenError::TokenError(std::string mensajeError, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase), mensajeError(mensajeError) {} 
+
 int TokenError::obtenerValor() const {
   return 0; // IMPLEMENTAR
 }

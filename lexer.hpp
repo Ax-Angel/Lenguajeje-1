@@ -7,7 +7,6 @@
 #include <string>
 
 #include "token.hpp"
-#include <memory>
 
 using ApuntadorAToken = std::shared_ptr<Token>;
 

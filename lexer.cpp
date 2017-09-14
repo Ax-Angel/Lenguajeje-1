@@ -9,6 +9,45 @@ Lexer::Lexer(std::istream &entrada) : entrada(entrada) {
   obtenerSiguienteToken();
 }
 
+void Lexer::leerCaracter() {
+  if (ultimoCaracter == '\n') {
+    lineaActual++;
+    columnaActual = 0;
+  }
+  posicionActual++;
+  columnaActual++;
+  ultimoCaracter = entrada.get();
+}
+
+void Lexer::saltarEspacioBlanco() {
+  while (isspace(ultimoCaracter)) leerCaracter();
+
+  // Si se encuentra '$$', denota un comentario de línea única.
+  // Leer hasta que termine la línea en la que se encuentra.
+  if (ultimoCaracter == '$') {
+    leerCaracter();
+    if (ultimoCaracter == '$') {
+      while (ultimoCaracter != '\n') {
+	leerCaracter();
+      }
+      
+      saltarEspacioBlanco();
+    }
+  }
+}
+
+ApuntadorAToken Lexer::leerNumero() {
+  
+}
+
+ApuntadorAToken Lexer::leerCadena() {
+  
+}
+
+ApuntadorAToken Lexer::leerSimboloEspecial() {
+  
+}
+
 ApuntadorAToken Lexer::obtenerTokenActual() const {
   return tokenActual;
 }
@@ -63,11 +102,14 @@ ApuntadorAToken Lexer::obtenerSiguienteToken() {
     return tokenActual = leerSimboloEspecial();
   }
 
+  // El símbolo no corresponde a ninguno especificado por nuestro
+  // lenguaje, así, es un error.
+  
   std::string mensajeError = "Símbolo no esperado: '";
-  mensaje += ultimoCaracter + "', "
+  mensajeError += ultimoCaracter + "', "
     + posicionActual + ", "
     + lineaActual + ", "
     + columnaActual ".";
   leerCaracter();
-  return std::make_shared<
+  return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
 }
