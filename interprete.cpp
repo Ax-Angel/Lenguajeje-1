@@ -4,5 +4,7 @@
 Interprete::Interprete(std::istream &entrada) : entrada(entrada), lexer(std::make_shared<Lexer>(entrada)) {}
 
 void Interprete::cicloDeLectura() {
-  
+  while (!entrada.eof()) {
+    *lexer -> obtenerSiguienteToken();
+  }
 }

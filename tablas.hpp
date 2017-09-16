@@ -1,9 +1,12 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <vector>
 
 #include "token.hpp"
+
+using ApuntadorAToken = std::shared_ptr<Token>;
 
 enum Tipo {
 };
@@ -11,10 +14,10 @@ enum Tipo {
 class Tabla {
   std::map<TokenIdentificador, bool> tablaSimbolos;
   std::vector<Token> tablaTokens;
-  std::vector<TokenCadena> tablaCadenas;
+  std::vector<TokenConstanteCadena> tablaCadenas;
   
 public:
-  void agregarSimbolo();
-  void agregarToken();
-  void agregarCadena();
+  Tabla ();
+  
+  void agregarToken(ApuntadorAToken token);
 };

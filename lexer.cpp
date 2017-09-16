@@ -6,7 +6,6 @@
 
 Lexer::Lexer(std::istream &entrada) : entrada(entrada) {
   leerCaracter();
-  obtenerSiguienteToken();
 }
 
 void Lexer::leerCaracter() {
@@ -14,6 +13,7 @@ void Lexer::leerCaracter() {
     lineaActual++;
     columnaActual = 0;
   }
+  
   posicionActual++;
   columnaActual++;
   ultimoCaracter = entrada.get();
@@ -37,36 +37,40 @@ void Lexer::saltarEspacioBlanco() {
 }
 
 ApuntadorAToken Lexer::leerNumero() {
-  string num;
-
+  std::string num = "";
+  
   while (isdigit(ultimoCaracter)) {
-    num += (string)ultimoCaracter;
+    std::string ultimoCaracterStr(1, ultimoCaracter);
+    num += ultimoCaracterStr;
     leerCaracter();
   }
 
-  if (isspace(ultimoCaracter)) {
-    return std::make_shared<TokenConstanteEntero>(std::stoi(num), posicionActual, lineaActual, columnaActual);
+  if (isspace(ultimoCaracter) || ultimoCaracter == -1) {
+    return std::make_shared<TokenConstanteEntero>(posicionActual, lineaActual, columnaActual, std::stoi(num));
   }
   
   if (ultimoCaracter == '.') {
     num += ".";
+    leerCaracter();
     while (isdigit(ultimoCaracter)) {
-      num += (string)ultimoCaracter;
+      std::string ultimoCaracterStr(1, ultimoCaracter);
+      num += ultimoCaracterStr;
       leerCaracter();
     }
   }
   
-  if (!isspace(ultimoCaracter)) {
+  if (!isspace(ultimoCaracter) || ultimoCaracter == -1) {
+    std::string ultimoCaracterStr(1, ultimoCaracter);
     std::string mensajeError = "Símbolo no esperado: '";
-    mensajeError += ultimoCaracter + "', "
-      + posicionActual + ", "
-      + lineaActual + ", "
-      + columnaActual ".";
+    mensajeError += ultimoCaracterStr + "', "
+      + std::to_string(posicionActual) + ", "
+      + std::to_string(lineaActual) + ", "
+      + std::to_string(columnaActual) + ".";
     leerCaracter();
     return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
   }
-  
-  std::make_shared<TokenConstanteReal>(std::stod(num), posicionActual, lineaActual, columnaActual);
+
+  return std::make_shared<TokenConstanteReal>(posicionActual, lineaActual, columnaActual, std::stod(num));
 }
 
 ApuntadorAToken Lexer::leerCadena() {
@@ -89,7 +93,6 @@ ApuntadorAToken Lexer::obtenerSiguienteToken() {
   saltarEspacioBlanco();
 
   if (entrada.eof()) {
-    // Implementar token EOF.
   }
 
   // El lexema inicia con un número, así, leer como tal
@@ -114,7 +117,7 @@ ApuntadorAToken Lexer::obtenerSiguienteToken() {
   // OPERADOR_ARITMETICO
   //
   
-  if (ischar(ultimoCaracter)) {
+  if (ultimoCaracter == '\"') {
     return tokenActual = leerCadena();
   }
 
@@ -133,12 +136,13 @@ ApuntadorAToken Lexer::obtenerSiguienteToken() {
 
   // El símbolo no corresponde a ninguno especificado por nuestro
   // lenguaje, así, es un error.
-  
+
+  std::string ultimoCaracterStr(1, ultimoCaracter);
   std::string mensajeError = "Símbolo no esperado: '";
-  mensajeError += ultimoCaracter + "', "
-    + posicionActual + ", "
-    + lineaActual + ", "
-    + columnaActual ".";
+  mensajeError += ultimoCaracterStr + "', "
+    + std::to_string(posicionActual) + ", "
+    + std::to_string(lineaActual) + ", "
+    + std::to_string(columnaActual) + ".";
   leerCaracter();
   return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
 }

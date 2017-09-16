@@ -1,6 +1,6 @@
 #include "token.hpp"
 
-Token::Token(int pos, int linea, int col, Clase clase) : pos(pos), linea(linea), col(col), clase(clase) {}
+Token::Token(int pos, int linea, int col, Clase clase, double valor) : pos(pos), linea(linea), col(col), clase(clase), valor(valor) {}
 
 Token::~Token() {}
 
@@ -10,15 +10,15 @@ int Token::obtenerLinea() const { return linea; }
 
 int Token::obtenerColumna() const { return col; }
 
+Clase Token::obtenerClase() const { return clase; }
+
+double Token::obtenerValor() const { return valor; }
+
 TokenIdentificador::TokenIdentificador(const std::string &identificador, int pos, int linea, int col, Clase clase) :
   Token(pos, linea, col, clase), identificador(identificador) {}
 
 const std::string &TokenIdentificador::obtenerIdentificador() const {
   return identificador;
-}
-
-int TokenIdentificador::obtenerValor() const {
-  return 0; // IMPLEMENTAR
 }
 
 void TokenIdentificador::aceptar(VisitaToken &t) { t.visita(*this); }
@@ -31,11 +31,11 @@ TipoPalabraReservada TokenPalabraReservada::obtenerPalabraReservada() const {
 
 void TokenPalabraReservada::aceptar(VisitaToken &t) { t.visita(*this); }
 
-TokenAsignacion::TokenAsignacion(int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase) {}
+TokenAsignacion::TokenAsignacion(int pos, int linea, int col, Clase clase, int valor) : Token(pos, linea, col, clase, valor) {}
 
 void TokenAsignacion::aceptar(VisitaToken &t) { t.visita(*this); }
 
-TokenOpRelacional::TokenOpRelacional(OperadorRelacional operadorRelacional, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase), operadorRelacional(operadorRelacional) {}
+TokenOpRelacional::TokenOpRelacional(OperadorRelacional operadorRelacional, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase, (int)operadorRelacional), operadorRelacional(operadorRelacional) {}
 
 OperadorRelacional TokenOpRelacional::obtenerOperadorRelacional() const {
   return operadorRelacional;
@@ -43,7 +43,7 @@ OperadorRelacional TokenOpRelacional::obtenerOperadorRelacional() const {
 
 void TokenOpRelacional::aceptar(VisitaToken &t) { t.visita(*this); }
 
-TokenOpAritmetico::TokenOpAritmetico(OperadorAritmetico operadorAritmetico, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase), operadorAritmetico(operadorAritmetico) {}
+TokenOpAritmetico::TokenOpAritmetico(OperadorAritmetico operadorAritmetico, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase, (int)operadorAritmetico), operadorAritmetico(operadorAritmetico) {}
 
 OperadorAritmetico TokenOpAritmetico::obtenerOperadorAritmetico() const {
   return operadorAritmetico;
@@ -51,35 +51,15 @@ OperadorAritmetico TokenOpAritmetico::obtenerOperadorAritmetico() const {
 
 void TokenOpAritmetico::aceptar(VisitaToken &t) { t.visita(*this); }
 
-TokenSimboloEspecial::TokenSimboloEspecial(int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase) {}
-
-int TokenSimboloEspecial::obtenerValor() const {
-  return 0; // IMPLEMENTAR
-}
+TokenSimboloEspecial::TokenSimboloEspecial(int pos, int linea, int col, Clase clase, int valor) : Token(pos, linea, col, clase, valor) {}
 
 void TokenSimboloEspecial::aceptar(VisitaToken &t) { t.visita(*this); }
 
-TokenConstanteEntero::TokenConstanteEntero(int valorConstanteEntero, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase), valorConstanteEntero(valorConstanteEntero) {}
-
-int TokenConstanteEntero::obtenerValor() const {
-  return 0; // IMPLEMENTAR
-}
-
-int TokenConstanteEntero::obtenerValorConstanteEntero() const {
-  return valorConstanteEntero;
-}
+TokenConstanteEntero::TokenConstanteEntero(int pos, int linea, int col, int valor) : Token(pos, linea, col, CONSTANTE_ENTERA_B10, valor) {}
 
 void TokenConstanteEntero::aceptar(VisitaToken &t) { t.visita(*this); }
 
-TokenConstanteReal::TokenConstanteReal(double valorConstanteReal, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase), valorConstanteReal(valorConstanteReal) {}
-
-int TokenConstanteReal::obtenerValor() const {
-  return 0; // IMPLEMENTAR
-}
-
-double TokenConstanteReal::obtenerValorConstanteReal() const {
-  return valorConstanteReal;
-}
+TokenConstanteReal::TokenConstanteReal(int pos, int linea, int col, double valor) : Token(pos, linea, col, CONSTANTE_REAL, valor) {}
 
 void TokenConstanteReal::aceptar(VisitaToken &t) { t.visita(*this); }
 
@@ -89,16 +69,8 @@ std::string TokenConstanteCadena::obtenerCadenaConstante() const {
   return cadenaConstante;
 }
 
-int TokenConstanteCadena::obtenerValor() const {
-  return 0; // IMPLEMENTAR
-}
-
 void TokenConstanteCadena::aceptar(VisitaToken &t) { t.visita(*this); }
 
 TokenError::TokenError(std::string mensajeError, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase), mensajeError(mensajeError) {} 
-
-int TokenError::obtenerValor() const {
-  return 0; // IMPLEMENTAR
-}
 
 void TokenError::aceptar(VisitaToken &t) { t.visita(*this); }
