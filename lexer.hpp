@@ -37,6 +37,14 @@ class Lexer {
   ApuntadorAToken leerCadena();
 
   ApuntadorAToken leerSimboloEspecial();
+
+  ApuntadorAToken leerIdentificador();
+
+  ApuntadorAToken leerPalabraReservada();
+
+  static const std::map<std::string, OperadorAritmetico> operadorAritmetico;
+  static const std::map<std::string, OperadorRelacional> operadorRelacional;
+  static const std::map<std::string, PalabraReservada> palabraReservada;
   
 public:
   Lexer(std::istream &entrada = std::cin);

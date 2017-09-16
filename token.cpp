@@ -23,9 +23,9 @@ const std::string &TokenIdentificador::obtenerIdentificador() const {
 
 void TokenIdentificador::aceptar(VisitaToken &t) { t.visita(*this); }
 
-TokenPalabraReservada::TokenPalabraReservada(TipoPalabraReservada palabraReservada, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase), palabraReservada(palabraReservada) {}
+TokenPalabraReservada::TokenPalabraReservada(PalabraReservada palabraReservada, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase, (int)palabraReservada), palabraReservada(palabraReservada) {}
 
-TipoPalabraReservada TokenPalabraReservada::obtenerPalabraReservada() const {
+PalabraReservada TokenPalabraReservada::obtenerPalabraReservada() const {
   return palabraReservada;
 }
 

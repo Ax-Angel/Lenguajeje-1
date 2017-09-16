@@ -57,7 +57,7 @@ public:
 
 
 // Palabras reservadas
-enum TipoPalabraReservada {
+enum PalabraReservada {
   PALABRARESERVADA_ENT,
   PALABRARESERVADA_ESCRIBE,
   PALABRARESERVADA_HAZ,
@@ -69,11 +69,11 @@ enum TipoPalabraReservada {
 };
 
 class TokenPalabraReservada : public Token {
-  TipoPalabraReservada palabraReservada;
+  PalabraReservada palabraReservada;
 
 public:
-  TokenPalabraReservada(TipoPalabraReservada palabraReservada, int pos = 0, int linea = 0, int col = 0, Clase clase = PALABRA_RESERVADA);
-  TipoPalabraReservada obtenerPalabraReservada() const;
+  TokenPalabraReservada(PalabraReservada palabraReservada, int pos = 0, int linea = 0, int col = 0, Clase clase = PALABRA_RESERVADA);
+  PalabraReservada obtenerPalabraReservada() const;
   virtual void aceptar(VisitaToken &t);
 };
 

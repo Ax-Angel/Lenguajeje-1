@@ -58,27 +58,98 @@ ApuntadorAToken Lexer::leerNumero() {
       leerCaracter();
     }
   }
-  
-  if (!isspace(ultimoCaracter) || ultimoCaracter == -1) {
+
+  if (isspace(ultimoCaracter) || ultimoCaracter == -1) {
+    return std::make_shared<TokenConstanteReal>(posicionActual, lineaActual, columnaActual, std::stod(num));
+  }
+
+  std::string ultimoCaracterStr(1, ultimoCaracter);
+  std::string mensajeError = "Símbolo no esperado: '";
+  mensajeError += ultimoCaracterStr + "', "
+    + std::to_string(posicionActual) + ", "
+    + std::to_string(lineaActual) + ", "
+    + std::to_string(columnaActual) + ".";
+  leerCaracter();
+  return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
+}
+
+ApuntadorAToken Lexer::leerCadena() {
+  std::string cadena = "\"";
+
+  while (!ultimoCaracter == '"') {
+    cadena += ultimoCaracter;
+    leerCaracter();
+  }
+
+  cadena += '"';
+  return std::make_shared<TokenConstanteCadena>(cadena, posicionActual, lineaActual, columnaActual);
+}
+
+ApuntadorAToken Lexer::leerSimboloEspecial() {
+}
+
+ApuntadorAToken Lexer::leerIdentificador() {
+
+}
+
+const std::map<std::string, OperadorAritmetico> Lexer::operadorAritmetico = {
+  { "DIVIDE", OPERADORARITMETICO_DIVISION },
+  { "MAS", OPERADORARITMETICO_SUMA },
+  { "MENOS", OPERADORARITMETICO_RESTA },
+  { "MULTIPLICA", OPERADORARITMETICO_MULTIPLICACION }
+};
+
+const std::map<std::string, PalabraReservada> Lexer::palabraReservada = {
+  { "ENT", PALABRARESERVADA_ENT },
+  { "ESCRIBE", PALABRARESERVADA_ESCRIBE },
+  { "HAZ", PALABRARESERVADA_HAZ },
+  { "LEE", PALABRARESERVADA_LEE },
+  { "MIENTRAS", PALABRARESERVADA_MIENTRAS },
+  { "REAL", PALABRARESERVADA_REAL },
+  { "SI", PALABRARESERVADA_SI },
+  { "SINO", PALABRARESERVADA_SINO }
+};
+
+ApuntadorAToken Lexer::leerPalabraReservada() {
+  std::string palabra = "";
+
+  while (isupper(ultimoCaracter)) {
+    palabra += ultimoCaracter;
+    leerCaracter();
+  }
+
+  if (!isspace(ultimoCaracter) && !(ultimoCaracter == -1)) {
     std::string ultimoCaracterStr(1, ultimoCaracter);
     std::string mensajeError = "Símbolo no esperado: '";
     mensajeError += ultimoCaracterStr + "', "
       + std::to_string(posicionActual) + ", "
       + std::to_string(lineaActual) + ", "
-      + std::to_string(columnaActual) + ".";
+      + std::to_string(columnaActual) + "."
+      + " Los operadores aritméticos y palabras reservadas van en mayúsculas.\n";
     leerCaracter();
     return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
   }
 
-  return std::make_shared<TokenConstanteReal>(posicionActual, lineaActual, columnaActual, std::stod(num));
-}
-
-ApuntadorAToken Lexer::leerCadena() {
+  auto itOperadorAritmetico = Lexer::operadorAritmetico.find(palabra);
+  auto itPalabraReservada = Lexer::palabraReservada.find(palabra);
   
-}
+  if (itOperadorAritmetico != Lexer::operadorAritmetico.end()) {
+    return std::make_shared<TokenOpAritmetico>(itOperadorAritmetico->second, posicionActual, lineaActual, columnaActual);
+  }
 
-ApuntadorAToken Lexer::leerSimboloEspecial() {
-  
+  if (itPalabraReservada != Lexer::palabraReservada.end()) {
+    return std::make_shared<TokenPalabraReservada>(itPalabraReservada->second, posicionActual, lineaActual, columnaActual);
+  }
+
+  std::string ultimoCaracterStr(1, ultimoCaracter);
+  std::string mensajeError = "La siguiente palabra reservada u operación no se encontró: '";
+  mensajeError += palabra + "', "
+    + std::to_string(posicionActual) + ", "
+    + std::to_string(lineaActual) + ", "
+    + std::to_string(columnaActual) + "."
+    + "\n";
+  leerCaracter();
+  return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
 }
 
 ApuntadorAToken Lexer::obtenerTokenActual() const {
@@ -107,17 +178,14 @@ ApuntadorAToken Lexer::obtenerSiguienteToken() {
     return tokenActual = leerNumero();
   }
 
-  // El lexema inicia con un caracter, así, leer como tal
-  // y determinar si es un identificador, palabra reservada,
-  // o una constante de cadena.
+  // El lexema inicia con un '"', así, leer como
+  // constante de tipo cadena.
   // Puede corresponder a alguna de las siguientes clases:
   //
-  // IDENTIFICADOR
-  // PALABRA_RESERVADA
-  // OPERADOR_ARITMETICO
+  // CONSTANTE_CADENA
   //
   
-  if (ultimoCaracter == '\"') {
+  if (ultimoCaracter == '"') {
     return tokenActual = leerCadena();
   }
 
@@ -134,6 +202,14 @@ ApuntadorAToken Lexer::obtenerSiguienteToken() {
     return tokenActual = leerSimboloEspecial();
   }
 
+  if (islower(ultimoCaracter)) {
+    return tokenActual = leerIdentificador();
+  }
+  
+  if (isupper(ultimoCaracter)) {
+    return tokenActual = leerPalabraReservada();
+  }
+  
   // El símbolo no corresponde a ninguno especificado por nuestro
   // lenguaje, así, es un error.
 

@@ -13,9 +13,8 @@ int main (int argc, char* argv[]) {
   
   while (!entrada.eof()) {
     auto &t = *lexer -> obtenerSiguienteToken();
-    std::cout<<typeid(&t).name() << " " << quote(&t) << std::endl;
+    //std::cout<<typeid(&t).name() << " " << quote(&t) << std::endl;
     std::cout << t.obtenerPosicion() << " " << t.obtenerLinea() << " " << t.obtenerColumna() << " " << t.obtenerClase() << " " << t.obtenerValor() << std::endl;
-    //std::cout << t.obtenerLinea() << std::endl;
   }
 
   return 0;
