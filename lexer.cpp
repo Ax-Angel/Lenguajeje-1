@@ -2,6 +2,7 @@
 #include <string>
 
 #include "lexer.hpp"
+#include "tablas.hpp"
 #include "token.hpp"
 
 Lexer::Lexer(std::istream &entrada) : entrada(entrada) {
@@ -84,7 +85,7 @@ ApuntadorAToken Lexer::leerCadena() {
 
   cadena += '"';
   leerCaracter();
-  return std::make_shared<TokenConstanteCadena>(cadena, posicionActual, lineaActual, columnaActual);
+  return std::make_shared<TokenConstanteCadena>(cadena, posicionActual, lineaActual, columnaActual, tabla->agregarCadenaConstante(cadena));
 }
 
 const std::map<std::string, OperadorRelacional> Lexer::operadorRelacional = {
@@ -198,25 +199,8 @@ ApuntadorAToken Lexer::leerIdentificador() {
     identificador += ultimoCaracter;
     leerCaracter();
   }
-
-  if (isspace(ultimoCaracter) || ultimoCaracter == -1) {
-    return std::make_shared<TokenIdentificador>(identificador, posicionActual, lineaActual, columnaActual);
-  }
-
-  while (!isspace(ultimoCaracter) && ultimoCaracter != -1) {
-    identificador += ultimoCaracter;
-    leerCaracter();
-  }
-
-  std::string mensajeError = "Error en el identificador: '";
-  mensajeError += identificador + "', "
-    + std::to_string(posicionActual) + ", "
-    + std::to_string(lineaActual) + ", "
-    + std::to_string(columnaActual) + "."
-    + " Los identificadores deben ser escritos únicamente con letras minúsculas.\n";
-  leerCaracter();
-
-  return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
+  
+  return std::make_shared<TokenIdentificador>(identificador, posicionActual, lineaActual, columnaActual, tabla->agregarIdentificador(identificador));
 }
 
 const std::map<std::string, OperadorAritmetico> Lexer::operadorAritmetico = {
@@ -296,6 +280,7 @@ ApuntadorAToken Lexer::obtenerSiguienteToken() {
   saltarEspacioBlanco();
 
   if (entrada.eof()) {
+    return 0;
   }
 
   // El lexema inicia con un número, así, leer como tal

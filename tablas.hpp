@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TABLAS_H
+#define TABLAS_H
 
 #include <map>
 #include <memory>
@@ -7,17 +8,26 @@
 #include "token.hpp"
 
 using ApuntadorAToken = std::shared_ptr<Token>;
-
-enum Tipo {
-};
+using _Token = std::pair<Clase, int>;
 
 class Tabla {
-  std::map<TokenIdentificador, bool> tablaSimbolos;
-  std::vector<Token> tablaTokens;
-  std::vector<TokenConstanteCadena> tablaCadenas;
+private:
+  static Tabla* instancia;
+  Tabla();
+
+  int ultimaPosicionCadenaConstante = 0;
+  int ultimaPosicionIdentificador = 0;
+
+  std::vector<_Token> tablaTokens;
+  std::map<std::string, int> tablaCadenasConstantes;
+  std::map<std::string, int> tablaIdentificadores;
   
 public:
-  Tabla ();
-  
-  void agregarToken(ApuntadorAToken token);
+  static Tabla* obtenerInstancia();
+
+  int agregarCadenaConstante(std::string cadenaConstante);
+  int agregarIdentificador(std::string identificador);
+  void agregarToken(Token& token);
 };
+
+#endif

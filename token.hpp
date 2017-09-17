@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOKEN_H
+#define TOKEN_H
 
 #include <string>
 
@@ -50,7 +51,7 @@ class TokenIdentificador : public Token {
   std::string identificador;
   
 public:
-  TokenIdentificador(const std::string &identificador, int pos = 0, int linea = 0, int col = 0, Clase clase = IDENTIFICADOR);
+  TokenIdentificador(const std::string &identificador, int pos = 0, int linea = 0, int col = 0, int valor = 0);
   const std::string &obtenerIdentificador() const;
   virtual void aceptar(VisitaToken &t);
 };
@@ -147,7 +148,7 @@ class TokenConstanteCadena : public Token {
   std::string cadenaConstante;
 
 public:
-  TokenConstanteCadena(std::string cadenaConstante, int pos = 0, int linea = 0, int col = 0, Clase clase = CONSTANTE_CADENA);
+  TokenConstanteCadena(std::string cadenaConstante, int pos = 0, int linea = 0, int col = 0, int valor = 0);
   std::string obtenerCadenaConstante() const;
   virtual void aceptar(VisitaToken &t);
 };
@@ -179,3 +180,5 @@ public:
   virtual void visita(TokenConstanteCadena &t) = 0;
   virtual void visita(TokenError &t) = 0; 
 };
+
+#endif

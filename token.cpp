@@ -14,8 +14,8 @@ Clase Token::obtenerClase() const { return clase; }
 
 double Token::obtenerValor() const { return valor; }
 
-TokenIdentificador::TokenIdentificador(const std::string &identificador, int pos, int linea, int col, Clase clase) :
-  Token(pos, linea, col, clase), identificador(identificador) {}
+TokenIdentificador::TokenIdentificador(const std::string &identificador, int pos, int linea, int col, int valor) :
+  Token(pos, linea, col, IDENTIFICADOR, valor), identificador(identificador) {}
 
 const std::string &TokenIdentificador::obtenerIdentificador() const {
   return identificador;
@@ -63,7 +63,7 @@ TokenConstanteReal::TokenConstanteReal(int pos, int linea, int col, double valor
 
 void TokenConstanteReal::aceptar(VisitaToken &t) { t.visita(*this); }
 
-TokenConstanteCadena::TokenConstanteCadena(std::string cadenaConstante, int pos, int linea, int col, Clase clase) : Token(pos, linea, col, clase), cadenaConstante(cadenaConstante) {}
+TokenConstanteCadena::TokenConstanteCadena(std::string cadenaConstante, int pos, int linea, int col, int valor) : Token(pos, linea, col, CONSTANTE_CADENA, valor), cadenaConstante(cadenaConstante) {}
 
 std::string TokenConstanteCadena::obtenerCadenaConstante() const {
   return cadenaConstante;

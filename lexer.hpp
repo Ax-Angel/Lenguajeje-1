@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LEXER_H
+#define LEXER_H
 
 #include <iostream>
 #include <map>
@@ -7,6 +8,7 @@
 #include <string>
 
 #include "token.hpp"
+#include "tablas.hpp"
 
 using ApuntadorAToken = std::shared_ptr<Token>;
 
@@ -42,6 +44,8 @@ class Lexer {
 
   ApuntadorAToken leerPalabraReservada();
 
+  Tabla* tabla = Tabla::obtenerInstancia();
+  
   static const std::map<std::string, OperadorAritmetico> operadorAritmetico;
   static const std::map<std::string, OperadorRelacional> operadorRelacional;
   static const std::map<std::string, PalabraReservada> palabraReservada;
@@ -56,3 +60,5 @@ public:
 
   ApuntadorAToken obtenerSiguienteToken();
 };
+
+#endif
