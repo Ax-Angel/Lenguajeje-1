@@ -45,6 +45,7 @@ class Lexer {
   static const std::map<std::string, OperadorAritmetico> operadorAritmetico;
   static const std::map<std::string, OperadorRelacional> operadorRelacional;
   static const std::map<std::string, PalabraReservada> palabraReservada;
+  static const std::map<std::string, int> simboloEspecial;
   
 public:
   Lexer(std::istream &entrada = std::cin);

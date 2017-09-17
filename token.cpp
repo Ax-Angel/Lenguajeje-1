@@ -51,7 +51,7 @@ OperadorAritmetico TokenOpAritmetico::obtenerOperadorAritmetico() const {
 
 void TokenOpAritmetico::aceptar(VisitaToken &t) { t.visita(*this); }
 
-TokenSimboloEspecial::TokenSimboloEspecial(int pos, int linea, int col, Clase clase, int valor) : Token(pos, linea, col, clase, valor) {}
+TokenSimboloEspecial::TokenSimboloEspecial(int pos, int linea, int col, int valor) : Token(pos, linea, col, SIMBOLO_ESPECIAL, valor) {}
 
 void TokenSimboloEspecial::aceptar(VisitaToken &t) { t.visita(*this); }
 

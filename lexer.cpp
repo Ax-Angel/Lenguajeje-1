@@ -75,17 +75,120 @@ ApuntadorAToken Lexer::leerNumero() {
 
 ApuntadorAToken Lexer::leerCadena() {
   std::string cadena = "\"";
-
-  while (!ultimoCaracter == '"') {
+  leerCaracter();
+  
+  while (ultimoCaracter != '"') {
     cadena += ultimoCaracter;
     leerCaracter();
   }
 
   cadena += '"';
+  leerCaracter();
   return std::make_shared<TokenConstanteCadena>(cadena, posicionActual, lineaActual, columnaActual);
 }
 
+const std::map<std::string, OperadorRelacional> Lexer::operadorRelacional = {
+  { ">", OPERADORRELACIONAL_MAYORQUE },
+  { ">=", OPERADORRELACIONAL_MAYORQUEIGUAL },
+  { "<", OPERADORRELACIONAL_MENORQUE },
+  { "<=", OPERADORRELACIONAL_MENORQUEIGUAL },
+  { "==", OPERADORRELACIONAL_ESIGUAL },
+  { "!=", OPERADORRELACIONAL_ESDISTINTO }
+};
+
+const std::map<std::string, int> Lexer::simboloEspecial = {
+  { ",", int(',') },
+  { ";", int(';') },
+  { "[", int('[') },
+  { "]", int(']') },
+  { "(", int('(') },
+  { ")", int(')') }
+};
+
 ApuntadorAToken Lexer::leerSimboloEspecial() {
+  std::string simbolo(1, ultimoCaracter);
+  leerCaracter();
+  auto itSimboloEspecial = Lexer::simboloEspecial.find(simbolo);
+  auto itOperadorRelacional = Lexer::operadorRelacional.find(simbolo);
+  
+  //
+  // El componente léxico encontrado es un símbolo especial:
+  // , ; [ ] ( )
+  //
+
+  if (itSimboloEspecial != Lexer::simboloEspecial.end()) {
+    return std::make_shared<TokenSimboloEspecial>(posicionActual, lineaActual, columnaActual, itSimboloEspecial->second);
+  }
+  
+  //
+  // El componente léxico encontrado es uno de los siguientes:
+  // < > =
+  // seguido de un caracter no correspondiente a un símbolo de puntuación
+  //
+  
+  if (!ispunct(ultimoCaracter)) {
+
+    //
+    // Asignación
+    //
+    
+    if (simbolo == "=") {
+      return std::make_shared<TokenAsignacion>(posicionActual, lineaActual, columnaActual);
+    }
+
+    //
+    // Operador relacional de un único caracter
+    //
+    
+    if (itOperadorRelacional != Lexer::operadorRelacional.end()) {
+      return std::make_shared<TokenOpRelacional>(itOperadorRelacional->second, posicionActual, lineaActual, columnaActual);
+    }
+    
+    std::string mensajeError = "Error en operador o símbolo especial: '";
+    mensajeError += simbolo + "', "
+      + std::to_string(posicionActual) + ", "
+      + std::to_string(lineaActual) + ", "
+      + std::to_string(columnaActual) + ". El operador o símbolo especial no se encontró.\n";
+    
+    return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
+  }
+  
+  simbolo += ultimoCaracter;
+
+  //
+  // El componente léxico está compuesto por dos símbolos de
+  // puntuación continuos, se aceptarán inmediatamente:
+  // >=, <=, ==, !=
+  //
+  
+  auto itOperadorRelacionalDos = Lexer::operadorRelacional.find(simbolo);
+  if (itOperadorRelacionalDos != Lexer::operadorRelacional.end()) {
+    leerCaracter();
+    return std::make_shared<TokenOpRelacional>(itOperadorRelacionalDos->second, posicionActual, lineaActual, columnaActual);
+  }
+
+  //
+  // El componente léxico está compuesto por un operador relacional de
+  // caracter único, seguido por un símbolo especial:
+  // =, =; =[ =] =( =) >, >; >[ >] >( >) <, <; <[ <] <( <)
+  // Agregar el operador relacional a las tablas.
+
+  if (itOperadorRelacional != Lexer::operadorRelacional.end()) {
+    return std::make_shared<TokenOpRelacional>(itOperadorRelacional->second, posicionActual, lineaActual, columnaActual);
+  }
+  else if (simbolo[0] == '=') {
+    return std::make_shared<TokenAsignacion>(posicionActual, lineaActual, columnaActual);
+  }
+
+  // El operador o símbolo especial no se encontró. Regresar error.
+  
+  std::string mensajeError = "Error en operador o símbolo especial: '";
+  mensajeError += simbolo[0] + "', "
+    + std::to_string(posicionActual) + ", "
+    + std::to_string(lineaActual) + ", "
+    + std::to_string(columnaActual) + ". El operador o símbolo especial no se encontró\n";
+
+  return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
 }
 
 ApuntadorAToken Lexer::leerIdentificador() {
@@ -178,8 +281,7 @@ ApuntadorAToken Lexer::leerPalabraReservada() {
     + " Los operadores aritméticos y palabras reservadas van en mayúsculas.\n";
   leerCaracter();
 
-  return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
-  
+  return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);  
 }
 
 ApuntadorAToken Lexer::obtenerTokenActual() const {
@@ -225,7 +327,6 @@ ApuntadorAToken Lexer::obtenerSiguienteToken() {
   // OPERADOR_ASIGNACION
   // OPERADOR_RELACIONAL
   // SIMBOLO_ESPECIAL
-  // CONSTANTE_CADENA
   //
   
   if (ispunct(ultimoCaracter)) {

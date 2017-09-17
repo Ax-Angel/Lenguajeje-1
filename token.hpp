@@ -125,7 +125,7 @@ class TokenSimboloEspecial : public Token {
   // caracter '=' en ASCii.
 
 public:
-  TokenSimboloEspecial(int pos = 0, int linea = 0, int col = 0, Clase clase = SIMBOLO_ESPECIAL, int valor = 0);
+  TokenSimboloEspecial(int pos = 0, int linea = 0, int col = 0, int valor = 0);
   virtual void aceptar(VisitaToken &t);
 };
 
