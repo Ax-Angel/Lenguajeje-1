@@ -60,18 +60,7 @@ ApuntadorAToken Lexer::leerNumero() {
     }
   }
 
-  if (isspace(ultimoCaracter) || ultimoCaracter == -1) {
-    return std::make_shared<TokenConstanteReal>(posicionActual, lineaActual, columnaActual, std::stod(num));
-  }
-
-  std::string ultimoCaracterStr(1, ultimoCaracter);
-  std::string mensajeError = "Símbolo no esperado: '";
-  mensajeError += ultimoCaracterStr + "', "
-    + std::to_string(posicionActual) + ", "
-    + std::to_string(lineaActual) + ", "
-    + std::to_string(columnaActual) + ".";
-  leerCaracter();
-  return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
+  return std::make_shared<TokenConstanteReal>(posicionActual, lineaActual, columnaActual, std::stod(num));
 }
 
 ApuntadorAToken Lexer::leerCadena() {
@@ -85,6 +74,7 @@ ApuntadorAToken Lexer::leerCadena() {
 
   cadena += '"';
   leerCaracter();
+
   return std::make_shared<TokenConstanteCadena>(cadena, posicionActual, lineaActual, columnaActual, tabla->agregarCadenaConstante(cadena));
 }
 
@@ -187,7 +177,7 @@ ApuntadorAToken Lexer::leerSimboloEspecial() {
   mensajeError += simbolo[0] + "', "
     + std::to_string(posicionActual) + ", "
     + std::to_string(lineaActual) + ", "
-    + std::to_string(columnaActual) + ". El operador o símbolo especial no se encontró\n";
+    + std::to_string(columnaActual) + ". El operador o símbolo especial no se encontró.\n";
 
   return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
 }
@@ -227,9 +217,7 @@ ApuntadorAToken Lexer::leerPalabraReservada() {
   while (isupper(ultimoCaracter)) {
     palabra += ultimoCaracter;
     leerCaracter();
-  }
 
-  if (isspace(ultimoCaracter) || ultimoCaracter == -1) {
     auto itOperadorAritmetico = Lexer::operadorAritmetico.find(palabra);
     auto itPalabraReservada = Lexer::palabraReservada.find(palabra);
   
@@ -240,32 +228,17 @@ ApuntadorAToken Lexer::leerPalabraReservada() {
     if (itPalabraReservada != Lexer::palabraReservada.end()) {
       return std::make_shared<TokenPalabraReservada>(itPalabraReservada->second, posicionActual, lineaActual, columnaActual);
     }
+  }
 
-    std::string ultimoCaracterStr(1, ultimoCaracter);
-    std::string mensajeError = "La siguiente palabra reservada u operación no se encontró: '";
-    mensajeError += palabra + "', "
-      + std::to_string(posicionActual) + ", "
-      + std::to_string(lineaActual) + ", "
-      + std::to_string(columnaActual) + "."
-      + "\n";
-    leerCaracter();
-    return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
-  }
-  
-  while (!isspace(ultimoCaracter) && ultimoCaracter != -1) {
-    palabra += ultimoCaracter;
-    leerCaracter();
-  }
-  
-  std::string mensajeError = "Símbolo no esperado: '";
+  std::string ultimoCaracterStr(1, ultimoCaracter);
+  std::string mensajeError = "La siguiente palabra reservada u operación no se encontró: '";
   mensajeError += palabra + "', "
     + std::to_string(posicionActual) + ", "
     + std::to_string(lineaActual) + ", "
     + std::to_string(columnaActual) + "."
-    + " Los operadores aritméticos y palabras reservadas van en mayúsculas.\n";
+    + "\n";
   leerCaracter();
-
-  return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);  
+  return std::make_shared<TokenError>(mensajeError, posicionActual, lineaActual, columnaActual);
 }
 
 ApuntadorAToken Lexer::obtenerTokenActual() const {
