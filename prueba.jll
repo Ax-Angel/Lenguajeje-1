@@ -1,0 +1,101 @@
+ENT inicio()[
+
+	$$Definicion de variables
+	$ $Esto debe sacar error
+	$$ Esto no
+	REALa=31.5;
+	ENTb=54;
+	REAL c=28.3;
+	ENT d=45;
+	REAL e =1.1;
+	ENT f =2;
+	REAL g = 31.05;
+	ENT h = 8;
+
+	ENT v;
+	REAL j;
+
+	$$Esto tira error
+
+	REALB=1.2;
+	ENTC=3.5;
+	REAL A=2.5;
+	ENT D=5;
+	REAL E = 6.3;
+	ENT H = 41;
+
+	ESCRIBE(hMAS5);
+	ESCRIBE(gMAS3.3);
+	ESCRIBE(5MAS5);
+	ESCRIBE(4.2MAS3.3);
+
+	3.3.2;
+
+	5aA;
+
+	AAA;
+
+	aaa;	
+
+	$$uso de palabras reservadas
+
+	SI(a)[
+		ESCRIBE("cadena%r", a);
+		LEE(v);
+	]SINO
+		HAZ[
+			a>b;
+			a >b;
+			a > b;
+			a>=b;
+			a >=b;
+			a >= b;
+			a > = b;
+			a<=b;
+			a <=b;
+			a <= b;
+			a < = b;
+			a<b;
+			a <b;
+			a < b;
+			a==b;
+			a ==b;
+			a == b;
+			a = = b;
+			a!=b;
+			a !=b;
+			a != b;
+			a ! = b;
+			a<>b;
+			a><b;
+
+		]MIENTRAS(i<10);
+
+	ESCRIBE ( b MAS d );
+	ESCRIBE( b MAS d );
+	ESCRIBE(b MAS d );
+	ESCRIBE(bMAS d );
+	ESCRIBE(bMASd );
+	ESCRIBE(bMASd);
+
+	ESCRIBE ( b MENOS d );
+	ESCRIBE( b MENOS d );
+	ESCRIBE(b MENOS d );
+	ESCRIBE(bMENOS d );
+	ESCRIBE(bMENOSd );
+	ESCRIBE(bMENOSd);
+
+	ESCRIBE ( b DIVIDE d );
+	ESCRIBE( b DIVIDE d );
+	ESCRIBE(b DIVIDE d );
+	ESCRIBE(bDIVIDE d );
+	ESCRIBE(bDIVIDEd );
+	ESCRIBE(bDIVIDEd);
+
+	ESCRIBE ( b MULTIPLICA d );
+	ESCRIBE( b MULTIPLICA d );
+	ESCRIBE(b MULTIPLICA d );
+	ESCRIBE(bMULTIPLICA d );
+	ESCRIBE(bMULTIPLICAd );
+	ESCRIBE(bMULTIPLICAd);
+]

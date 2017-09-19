@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo -e "Este programa usa gcc 4.7 o mayor, en caso de que la versión no sea compatible, \nse descargara la versión 4.7 de gcc y g++"
+
+VERSION=$(dpkg -l | grep -o "gcc-6")
+
+if [ "$VERSION" ]; then
+	echo -e "Todo listo para funcionar"
+
+else
+	VERSION=$(dpkg -l | grep -o "gcc-5")
+	if [ "$VERSION" ]; then
+		echo -e "Todo listo para funcionar"
+	else
+		VERSION=$(dpkg -l | grep -o "gcc-4.7")
+		if [ "$VERSION" ]; then
+			echo -e "Todo listo para funcionar"
+		else
+			$(sudo apt-get install gcc-4.7 g++-4.7)
+		fi
+	fi
+fi
