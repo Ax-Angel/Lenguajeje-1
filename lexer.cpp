@@ -9,6 +9,8 @@ Lexer::Lexer(std::istream &entrada) : entrada(entrada) {
   leerCaracter();
 }
 
+//Esta función lee caracter por caracter. Ese caracter se guarda en la variable ultimoCaracter
+
 void Lexer::leerCaracter() {
   if (ultimoCaracter == '\n') {
     lineaActual++;
@@ -39,17 +41,20 @@ void Lexer::saltarEspacioBlanco() {
 
 ApuntadorAToken Lexer::leerNumero() {
   std::string num = "";
-  
+  //Se verifica caracter por caracter que se trate de un digito.
   while (isdigit(ultimoCaracter)) {
     std::string ultimoCaracterStr(1, ultimoCaracter);
     num += ultimoCaracterStr;
     leerCaracter();
   }
 
+  //En caso de que a el digito tenga como sucesor un espacio en blanco, se reconoce como un entero. 
   if (isspace(ultimoCaracter) || ultimoCaracter == -1) {
     return std::make_shared<TokenConstanteEntero>(posicionActual, lineaActual, columnaActual, std::stoi(num));
   }
-  
+
+
+  //Si reconoce un punto entre los digitos, se reconoce como un real
   if (ultimoCaracter == '.') {
     num += ".";
     leerCaracter();
@@ -65,6 +70,7 @@ ApuntadorAToken Lexer::leerNumero() {
 
 ApuntadorAToken Lexer::leerCadena() {
   std::string cadena = "\"";
+  //La función guarda todos los caracteres hasta que se encuentre con '"' 
   leerCaracter();
   
   while (ultimoCaracter != '"') {
@@ -213,6 +219,10 @@ const std::map<std::string, PalabraReservada> Lexer::palabraReservada = {
 
 ApuntadorAToken Lexer::leerPalabraReservada() {
   std::string palabra = "";
+
+  //El lexema se reconocer cuando el ultimo caracter es una letra mayuscula.
+  //Cuando se termina de leer la palabra, se compara si pertenece a las palabras reservadas
+  //o  los operadores aritméticos. Si no coincide con ninguna de las dos clases, se genera un error
 
   while (isupper(ultimoCaracter)) {
     palabra += ultimoCaracter;

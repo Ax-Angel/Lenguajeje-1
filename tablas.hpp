@@ -28,6 +28,9 @@ public:
   int agregarCadenaConstante(std::string cadenaConstante);
   int agregarIdentificador(std::string identificador);
   void agregarToken(Token& token);
+  void imprimeIdentificador();
+  void imprimeCadenaConstante();
+  void imprimeTablaTokens();
 };
 
 #endif

@@ -1,8 +1,16 @@
+/*
+	Analizador Léxico
+	Creado por: Mateo Torres Ruiz y Ángel Rodríguez Mendoza
+	Proyecto para la asignatura de Compiladores 2018-1 Grupo 2
+ */
+
 #include <fstream>
 #include <iostream>
 #include <memory>
 
 #include "lexer.hpp"
+
+//Se crea la instancia de las tablas.
 
 Tabla* tabla = Tabla::obtenerInstancia();
 
@@ -14,9 +22,14 @@ int main (int argc, char* argv[]) {
   
   while (!entrada.eof()) {
     auto &t = *lexer -> obtenerSiguienteToken();
+
     tabla -> agregarToken(t);
-    std::cout << t.obtenerPosicion() << " " << t.obtenerLinea() << " " << t.obtenerColumna() << " " << t.obtenerClase() << " " << t.obtenerValor() << std::endl;
+    //std::cout << t.obtenerPosicion() << " " << t.obtenerLinea() << " " << t.obtenerColumna() << " " << t.obtenerClase() << " " << t.obtenerValor() << std::endl;
   }
+
+  tabla -> imprimeIdentificador();
+  tabla -> imprimeCadenaConstante();
+  tabla -> imprimeTablaTokens();
 
   return 0;
 }
