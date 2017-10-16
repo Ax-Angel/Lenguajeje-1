@@ -21,10 +21,15 @@ int main (int argc, char* argv[]) {
   std::shared_ptr<Lexer> lexer(std::make_shared<Lexer>(entrada));
   
   while (!entrada.eof()) {
+
     auto &t = *lexer -> obtenerSiguienteToken();
 
+    if(entrada.eof()){
+      break;
+    }
+
     tabla -> agregarToken(t);
-    //std::cout << t.obtenerPosicion() << " " << t.obtenerLinea() << " " << t.obtenerColumna() << " " << t.obtenerClase() << " " << t.obtenerValor() << std::endl;
+
   }
 
   tabla -> imprimeIdentificador();
