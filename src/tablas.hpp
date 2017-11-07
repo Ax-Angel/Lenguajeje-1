@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "token.hpp"
+#include "parser.hpp"
 
 using ApuntadorAToken = std::shared_ptr<Token>;
 using _Token = std::pair<Clase, int>;
@@ -23,10 +24,10 @@ private:
   std::map<std::string, int> tablaCadenasConstantes;
   std::map<std::string, int> tablaIdentificadores;
   // Átomos que provienen de clases que pueden parsearse de una única forma.
-  static const std::map<Clase, char> atomosTipoA;
+  static const std::map<Clase, Termino> atomosTipoA;
   // Átomos que provienen de clases que pueden parsearse de diversas formas.
-  static const std::map<_Token, char> atomosTipoB;
-  std::queue<char> atomos;
+  static const std::map<_Token, Termino> atomosTipoB;
+  std::queue<Termino> atomos;
   
 public:
   static Tabla* obtenerInstancia();
@@ -37,7 +38,7 @@ public:
   void imprimeIdentificador();
   void imprimeCadenaConstante();
   void imprimeTablaTokens();
-  std::string obtenerCadenaDeAtomos();
+  std::vector<Termino> obtenerCadenaDeAtomos();
 };
 
 #endif

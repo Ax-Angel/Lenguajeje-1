@@ -16,7 +16,7 @@ Tabla* Tabla::obtenerInstancia() {
 
 Tabla::Tabla() {
   // Fin de cadena de átomos.
-  atomos.push('^');
+  atomos.push(Termino({ "^", true }));
 }
 
 //La función primero verifica que la cadena no se encuentre en la tabla de cadenas.
@@ -46,40 +46,40 @@ int Tabla::agregarIdentificador(std::string identificador) {
 }
 
 
-const std::map<Clase, char> Tabla::atomosTipoA = {
-  { IDENTIFICADOR, 'a' },
-  { OPERADOR_ASIGNACION, '=' },
-  { CONSTANTE_ENTERA_B10, 'c' },
-  { CONSTANTE_REAL, 'n' },
-  { CONSTANTE_CADENA, 's' }
+const std::map<Clase, Termino> Tabla::atomosTipoA = {
+  { IDENTIFICADOR, { "a", true } },
+  { OPERADOR_ASIGNACION, { "=", true } },
+  { CONSTANTE_ENTERA_B10, { "c", true } },
+  { CONSTANTE_REAL, { "n", true } },
+  { CONSTANTE_CADENA, { "s", true } }
 };
 
-const std::map<_Token, char> Tabla::atomosTipoB = {
-  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_ENT), 't' },
-  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_ESCRIBE), 'w' },
-  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_HAZ), 'h' },
-  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_LEE), 'l' },
-  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_MIENTRAS), 'm' },
-  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_REAL), 'r' },
-  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_SI), 'i' },
-  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_SINO), 'e' },
-  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_MAYORQUE), '>' },
-  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_MAYORQUEIGUAL), 'g' },
-  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_MENORQUE), '<' },
-  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_MENORQUEIGUAL), 'p' },
-  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_ESIGUAL), 'q' },
-  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_ESDISTINTO), '!' },
-  { _Token(OPERADOR_ARITMETICO, OPERADORARITMETICO_DIVISION), '/' },
-  { _Token(OPERADOR_ARITMETICO, OPERADORARITMETICO_SUMA), '+' },
-  { _Token(OPERADOR_ARITMETICO, OPERADORARITMETICO_RESTA), '-' },
-  { _Token(OPERADOR_ARITMETICO, OPERADORARITMETICO_MULTIPLICACION), '*' },
-  { _Token(SIMBOLO_ESPECIAL, (int)(',')), ',' },
-  { _Token(SIMBOLO_ESPECIAL, (int)(';')), ';' },
-  { _Token(SIMBOLO_ESPECIAL, (int)('[')), '[' },
-  { _Token(SIMBOLO_ESPECIAL, (int)(']')), ']' },
-  { _Token(SIMBOLO_ESPECIAL, (int)('(')), '(' },
-  { _Token(SIMBOLO_ESPECIAL, (int)(')')), ')' },
-  { _Token(SIMBOLO_ESPECIAL, (int)('@')), '@' },
+const std::map<_Token, Termino> Tabla::atomosTipoB = {
+  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_ENT), { "t", true } },
+  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_ESCRIBE), { "w", true } },
+  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_HAZ), { "h", true } },
+  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_LEE), { "l", true } },
+  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_MIENTRAS), { "m", true } },
+  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_REAL), { "r", true } },
+  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_SI), { "i", true } },
+  { _Token(PALABRA_RESERVADA, PALABRARESERVADA_SINO), { "e", true } },
+  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_MAYORQUE), { ">", true } },
+  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_MAYORQUEIGUAL), { "g", true } },
+  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_MENORQUE), { "<", true } },
+  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_MENORQUEIGUAL), { "p", true } },
+  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_ESIGUAL), { "q", true } },
+  { _Token(OPERADOR_RELACIONAL, OPERADORRELACIONAL_ESDISTINTO), { "!", true } },
+  { _Token(OPERADOR_ARITMETICO, OPERADORARITMETICO_DIVISION), { "/", true } },
+  { _Token(OPERADOR_ARITMETICO, OPERADORARITMETICO_SUMA), { "+", true } },
+  { _Token(OPERADOR_ARITMETICO, OPERADORARITMETICO_RESTA), { "-", true } },
+  { _Token(OPERADOR_ARITMETICO, OPERADORARITMETICO_MULTIPLICACION), { "*", true } },
+  { _Token(SIMBOLO_ESPECIAL, (int)(',')), { ",", true } },
+  { _Token(SIMBOLO_ESPECIAL, (int)(';')), { ";", true } },
+  { _Token(SIMBOLO_ESPECIAL, (int)('[')), { "[", true } },
+  { _Token(SIMBOLO_ESPECIAL, (int)(']')), { "]", true } },
+  { _Token(SIMBOLO_ESPECIAL, (int)('(')), { "(", true } },
+  { _Token(SIMBOLO_ESPECIAL, (int)(')')), { ")", true } },
+  { _Token(SIMBOLO_ESPECIAL, (int)('@')), { "@", true } },
 };
   
 void Tabla::agregarToken(Token& token) {
@@ -100,7 +100,7 @@ void Tabla::agregarToken(Token& token) {
   }
 
   // Caracterización del error.
-  atomos.push('?');
+  atomos.push(Termino({ "?", true }));
 }
 
 void Tabla::imprimeIdentificador(){
@@ -130,12 +130,13 @@ void Tabla::imprimeTablaTokens(){
   }
 }
 
-std::string Tabla::obtenerCadenaDeAtomos() {
-  std::queue<char> q = atomos;
-  std::string cadenaDeAtomos;
+std::vector<Termino> Tabla::obtenerCadenaDeAtomos() {
+  std::queue<Termino> q = atomos;
+  std::vector<Termino> cadenaDeAtomos;
 
+  
   while (!q.empty()) {
-    cadenaDeAtomos += q.front();
+    cadenaDeAtomos.push_back(q.front());
     q.pop();
   }
 
