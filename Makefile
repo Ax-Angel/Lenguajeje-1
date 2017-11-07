@@ -1,4 +1,4 @@
-SOURCE=src/token.hpp src/token.cpp src/lexer.hpp src/lexer.cpp src/tablas.hpp src/tablas.cpp src/main.cpp
+SOURCE=src/token.hpp src/token.cpp src/lexer.hpp src/lexer.cpp src/tablas.hpp src/tablas.cpp src/parser.hpp src/parser.cpp src/main.cpp
 MYPROGRAM=anaLex
 
 CC=g++

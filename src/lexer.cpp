@@ -220,24 +220,24 @@ const std::map<std::string, PalabraReservada> Lexer::palabraReservada = {
 ApuntadorAToken Lexer::leerPalabraReservada() {
   std::string palabra = "";
 
-  //El lexema se reconocer cuando el ultimo caracter es una letra mayuscula.
+  //El lexema se reconoce cuando el ultimo caracter es una letra mayuscula.
   //Cuando se termina de leer la palabra, se compara si pertenece a las palabras reservadas
   //o  los operadores aritméticos. Si no coincide con ninguna de las dos clases, se genera un error
 
   while (isupper(ultimoCaracter)) {
     palabra += ultimoCaracter;
     leerCaracter();
+  }
 
-    auto itOperadorAritmetico = Lexer::operadorAritmetico.find(palabra);
-    auto itPalabraReservada = Lexer::palabraReservada.find(palabra);
+  auto itOperadorAritmetico = Lexer::operadorAritmetico.find(palabra);
+  auto itPalabraReservada = Lexer::palabraReservada.find(palabra);
   
-    if (itOperadorAritmetico != Lexer::operadorAritmetico.end()) {
-      return std::make_shared<TokenOpAritmetico>(itOperadorAritmetico->second, posicionActual, lineaActual, columnaActual);
-    }
-
-    if (itPalabraReservada != Lexer::palabraReservada.end()) {
-      return std::make_shared<TokenPalabraReservada>(itPalabraReservada->second, posicionActual, lineaActual, columnaActual);
-    }
+  if (itOperadorAritmetico != Lexer::operadorAritmetico.end()) {
+    return std::make_shared<TokenOpAritmetico>(itOperadorAritmetico->second, posicionActual, lineaActual, columnaActual);
+  }
+  
+  if (itPalabraReservada != Lexer::palabraReservada.end()) {
+    return std::make_shared<TokenPalabraReservada>(itPalabraReservada->second, posicionActual, lineaActual, columnaActual);
   }
 
   std::string ultimoCaracterStr(1, ultimoCaracter);

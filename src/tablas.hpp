@@ -3,6 +3,7 @@
 
 #include <map>
 #include <memory>
+#include <queue>
 #include <vector>
 
 #include "token.hpp"
@@ -17,20 +18,26 @@ private:
 
   int ultimaPosicionCadenaConstante = 0;
   int ultimaPosicionIdentificador = 0;
-
+  
   std::vector<_Token> tablaTokens;
   std::map<std::string, int> tablaCadenasConstantes;
   std::map<std::string, int> tablaIdentificadores;
+  // Átomos que provienen de clases que pueden parsearse de una única forma.
+  static const std::map<Clase, char> atomosTipoA;
+  // Átomos que provienen de clases que pueden parsearse de diversas formas.
+  static const std::map<_Token, char> atomosTipoB;
+  std::queue<char> atomos;
   
 public:
   static Tabla* obtenerInstancia();
-
+  
   int agregarCadenaConstante(std::string cadenaConstante);
   int agregarIdentificador(std::string identificador);
   void agregarToken(Token& token);
   void imprimeIdentificador();
   void imprimeCadenaConstante();
   void imprimeTablaTokens();
+  std::string obtenerCadenaDeAtomos();
 };
 
 #endif

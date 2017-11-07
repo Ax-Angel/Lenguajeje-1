@@ -18,7 +18,7 @@ void sanitize (char* file) {
 
   std::fstream check(file);
   if (check.seekg(-1, std::ios_base::end).get() != '\n') {
-    out << '\n';
+    out << "\n\n";
   }
 
   out.close();
@@ -30,9 +30,6 @@ int main (int argc, char* argv[]) {
   std::istream &entrada(file);
   
   std::shared_ptr<Lexer> lexer(std::make_shared<Lexer>(entrada));
-
-  printf("Hello\n");
-  int i = 0;
   
   while (true) {
     auto &t = *lexer -> obtenerSiguienteToken();
@@ -42,7 +39,6 @@ int main (int argc, char* argv[]) {
     }
 
     tabla -> agregarToken(t);
-    printf("%d ", i++);
   }
   
   tabla -> imprimeIdentificador();
