@@ -1,4 +1,5 @@
 #include "parser.hpp"
+#include <iostream>
 
 const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglasDeProduccion = {
   // P -> <LF>
@@ -18,17 +19,17 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
 
   // LF -> 3
   // { '^' }
-  { std::pair<Termino, Termino>({ "LF", false }, { "3", true }),
-    { { "^", true } }
+  { std::pair<Termino, Termino>({ "LF", false }, { "^", true }),
+    { { "3", true } }
   },
   
   // <LF> -> <FUN><LF>
   // { 't', 'r', 'a' }
   { std::pair<Termino, Termino>({ "LF", false }, { "t", true }),
-    { { "LF", false } }
+    { { "FUN", false }, { "LF", false } }
   },
   { std::pair<Termino, Termino>({ "LF", false }, { "r", true }),
-    { { "LF", false } }
+    { { "FUN", false }, { "LF", false } }
   },
   { std::pair<Termino, Termino>({ "LF", false }, { "a", true }),
     { { "FUN", false }, { "LF", false } }
@@ -52,7 +53,7 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
   // <LA> -> 3
   // { ')' }
   { std::pair<Termino, Termino>({ "LA", false }, { ")", true }),
-    { { ")", true } }
+    { { "3", true } }
   },
 
   // <LA> -> Va<LAP>
@@ -267,7 +268,7 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
     { { "M", false } }
   },
 
- // S -> I
+  // S -> I
   // { 'i' }
   { std::pair<Termino, Termino>({ "S", false }, { "i", true }),
     { { "I", false } }
@@ -288,7 +289,7 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
   // A -> a=E
   // {'a'}
   { std::pair<Termino, Termino>({ "A", false }, { "a", true }),
-    { { "a", true }, {"=", true}, {"E", false} }
+    { { "a", true }, {"=", true}, {"E", false}, {";", true } }
   },
 
   // W -> wW'
@@ -323,7 +324,7 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
 
   //W'' -> ,W'
   //{","}
-  { std::pair<Termino, Termino>({ "W'", false }, { ",", true }),
+  { std::pair<Termino, Termino>({ "W''", false }, { ",", true }),
     { { ",", true }, {"W'", false} }
   },
 
@@ -333,10 +334,10 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
     { { ";", true } }
   },
 
-  //R -> IaR'
-  //{"L"}
-  { std::pair<Termino, Termino>({ "R", false }, { "L", false }),
-    { { "I", false }, {"a", true}, {"R'", false} }
+  //R -> laR'
+  //{"l"}
+  { std::pair<Termino, Termino>({ "R", false }, { "l", false }),
+    { { "l", true }, {"a", true}, {"R'", false} }
   },
 
   //R' -> ,aR'
@@ -524,16 +525,16 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
   { std::pair<Termino, Termino>({ "T", false }, { "(", true }),
     { { "F", false }, {"T'", false} }
   },
-  { std::pair<Termino, Termino>({ "E", false }, { "a", true }),
+  { std::pair<Termino, Termino>({ "T", false }, { "a", true }),
     { { "F", false }, {"T'", false} }
   },
-  { std::pair<Termino, Termino>({ "E", false }, { "n", true }),
+  { std::pair<Termino, Termino>({ "T", false }, { "n", true }),
     { { "F", false }, {"T'", false} }
   },
-  { std::pair<Termino, Termino>({ "E", false }, { "c", true }),
+  { std::pair<Termino, Termino>({ "T", false }, { "c", true }),
     { { "F", false }, {"T'", false} }
   },
-  { std::pair<Termino, Termino>({ "E", false }, { "@", true }),
+  { std::pair<Termino, Termino>({ "T", false }, { "@", true }),
     { { "F", false }, {"T'", false} }
   },
 
@@ -614,42 +615,109 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
   //{"@"}
   { std::pair<Termino, Termino>({ "F", false }, { "@", true }),
     { {"@", true }, {"a", true}, {"(", true}, {"LP", false}, {")", true} }
+  },
+
+  // a , a
+  { std::pair<Termino, Termino>({ "a", true }, { "a", true }),
+    { { "a", true } }
+  },
+
+  // e , e
+  { std::pair<Termino, Termino>({ "e", true }, { "e", true }),
+    { { "e", true } }
+  },
+
+  // ( , (
+  { std::pair<Termino, Termino>({ "(", true }, { "(", true }),
+    { { "(", true } }
+  },
+
+  // ) , )
+  { std::pair<Termino, Termino>({ ")", true }, { ")", true }),
+    { { ")", true } }
+  },
+
+  // [ , [
+  { std::pair<Termino, Termino>({ "[", true }, { "[", true }),
+    { { "[", true } }
+  },
+
+  // ] , ]
+  { std::pair<Termino, Termino>({ "]", true }, { "]", true }),
+    { { "]", true } }
+  },
+
+  // ; , ;
+  { std::pair<Termino, Termino>({ ";", true }, { ";", true }),
+    { { ";", true } }
+  },
+
+  // = , =
+  { std::pair<Termino, Termino>({ "=", true }, { "=", true }),
+    { { "=", true } }
   }
+    
 };
 
 Parser::Parser(std::vector<Termino> &cadenaDeAtomos) : cadenaDeAtomos(cadenaDeAtomos) {
   this -> consumir.push({ "&", true });
   this -> consumir.push({ "P", false });
+  cadenaDeAtomos.push_back(Termino({ "^", true }));
 }
 
-bool Parser::consumirAtomos() {
+bool Parser::consumirAtomos(bool verbose) {
   while (true) {
     Termino consumirStack = this -> consumir.top();
     Termino consumirCadena = this -> cadenaDeAtomos.front();
 
+    if (verbose) {
+      std::getchar();
+      std::cout << "\nStack = ";
+      std::stack<Termino> A;
+      while (!consumir.empty()) {
+	std::cout << consumir.top().identificador << " ";
+	Termino t = consumir.top(); consumir.pop(); A.push(t);
+      } std::cout << "\n";
+
+      while (!A.empty()) { consumir.push(A.top()); A.pop(); }
+    }
+    
     if (consumirStack == Termino({ "&", true }) && consumirCadena == Termino({ "^", true }))
       return true;
 
     auto itProducir = this -> reglasDeProduccion.find(std::make_pair(consumirStack, consumirCadena));
     if (itProducir == reglasDeProduccion.end()) {
       // Error
+      std::cout << ">ERROR: El átomo a consumir '" << consumirCadena.identificador << "' no se encontró en ninguna producción del "
+		<< "último elemento del stack: '" << consumirStack.identificador << "'.\n";
+      
       return false;
     }
     std::vector<Termino> producir = itProducir -> second;
+
+    if (verbose) { for (auto a : cadenaDeAtomos) std::cout << a.identificador << " "; std::cout<<"\n"; }
     
     if (producir.front() == Termino({ "3", true })) { // Pop y retén
-      cadenaDeAtomos.insert(cadenaDeAtomos.begin(), consumirCadena);
+      if (verbose) std::cout << "POP Y RETEN\n";
+      consumir.pop();
     }
     else if (producir.front().terminal && (int)producir.size() == 1) { // Pop y avanza
+      if (verbose) std::cout << "POP Y AVANZA\n";
+      consumir.pop();
+      cadenaDeAtomos.erase(cadenaDeAtomos.begin());
       continue;
     }
     else if (producir.front().terminal) { // Reemplazo y avanza
+      if (verbose) std::cout << "REEMPLAZO Y AVANZA\n";
+      consumir.pop();
       for (int i = (int)producir.size() - 1; i > 0; i--)
 	consumir.push(producir[i]);
+      cadenaDeAtomos.erase(cadenaDeAtomos.begin());
     }
     else if (!producir.front().terminal) { // Reemplazo y retén
-      cadenaDeAtomos.insert(cadenaDeAtomos.begin(), consumirCadena);
-      for (int i = (int)producir.size() - 1; i > 0; i--)
+      if (verbose) std::cout << "REEMPLAZO Y RETEN\n";
+      consumir.pop();
+      for (int i = (int)producir.size() - 1; i >= 0; i--)
 	consumir.push(producir[i]);
     }
   }

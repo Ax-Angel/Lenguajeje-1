@@ -1,0 +1,9 @@
+ENT inicio() [
+    LEE a, b, c;
+
+    ESCRIBE "abc";
+    ESCRIBE "valor x: ", x;
+]
+
+
+

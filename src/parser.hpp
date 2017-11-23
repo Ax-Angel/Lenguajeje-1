@@ -26,7 +26,7 @@ private:
   
 public:
   Parser(std::vector<Termino> &cadenaDeAtomos);
-  bool consumirAtomos();
+  bool consumirAtomos(bool verbose);
 };
 
 #endif

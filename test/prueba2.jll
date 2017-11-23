@@ -3,20 +3,29 @@ principal()
     REAL x, y;
     x = 0;
     y = x; 
-    ESCRIBE("Hola, mundo", y);
+    ESCRIBE "Hola, mundo", y;
 
     SI(x <= 50) [
-        ESCRIBE("x es menor que 50", x);
+        ESCRIBE "x es menor que 50", x;
     ] SINO [
-        LEE("Nuevo valor de equis");
+        LEE x;
     ]
 
     reloj = 60;
     pi = 3.1426;
     e = 2.17;
-
-    cadena = "Esto es una cadena";
 ]
-$$ Esto es un comentario
 
+$$ Esto es un comentario
 $$ Programa sumamente modificado!
+
+
+
+
+
+
+
+
+
+
+

@@ -16,7 +16,7 @@ Tabla* Tabla::obtenerInstancia() {
 
 Tabla::Tabla() {
   // Fin de cadena de átomos.
-  atomos.push(Termino({ "^", true }));
+  //atomos.push(Termino({ "^", true }));
 }
 
 //La función primero verifica que la cadena no se encuentre en la tabla de cadenas.

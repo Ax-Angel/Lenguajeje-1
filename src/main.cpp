@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "lexer.hpp"
+#include "parser.hpp"
 
 //Se crea la instancia de las tablas.
 Tabla* tabla = Tabla::obtenerInstancia();
@@ -21,6 +22,7 @@ void sanitize (char* file) {
     out << "\n\n";
   }
 
+  out << "\n";
   out.close();
 }
 
@@ -45,5 +47,11 @@ int main (int argc, char* argv[]) {
   tabla -> imprimeCadenaConstante();
   tabla -> imprimeTablaTokens();
 
+  std::cout << "\nCadena de átomos: ";
+  auto v = tabla -> obtenerCadenaDeAtomos();
+  for (Termino t : v) std::cout << t.identificador << " ";
+  std::cout << "\n";
+  Parser p(v); p.consumirAtomos(false);
+  
   return 0;
 }
