@@ -51,7 +51,7 @@ int main (int argc, char* argv[]) {
   auto v = tabla -> obtenerCadenaDeAtomos();
   for (Termino t : v) std::cout << t.identificador << " ";
   std::cout << "\n";
-  Parser p(v); p.consumirAtomos(true);
+  Parser p(v); p.consumirAtomos(false);
   
   return 0;
 }
