@@ -368,14 +368,15 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
   // I -> i(<REL>)<PR>e<PR>
   //{"i"}
   { std::pair<Termino, Termino>({ "I", false }, { "i", true }),
-    { { "i", true }, {"(", true }, { "REL", false}, { ")", true }, { "PR", false}, { "I", true } }
+    { { "i", true }, {"(", true }, { "REL", false}, { ")", true }, { "PR", false}, { "e", true }, { "PR", false } }
   },
+  /*
   { std::pair<Termino, Termino>({ "I", false }, { "e", true }),
     { { "e", true }, { "(", true }, { "REL", false}, { ")", true }, { "PR", false} }
   },
   { std::pair<Termino, Termino>({ "I", false }, { "]", true }),
     { { "3", true } }
-  },
+    },*/
   
 
   //<REL> -> E<OR>E
