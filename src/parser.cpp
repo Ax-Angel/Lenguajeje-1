@@ -208,6 +208,7 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
     { { "PR", false }, { "BP", false } }
   },
   
+  
   // <PR> -> S
   // { '@', 'a', 'w', 'l', 'h', 'm', 'i' }
   { std::pair<Termino, Termino>({ "PR", false }, { "@", true }),
@@ -352,23 +353,30 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
     { { ";", true } }
   },
 
-  //H -> h[<BP>]m(<REL>)
+  //H -> h[<BP>]m(<REL>);
   //{"h"}
   { std::pair<Termino, Termino>({ "H", false }, { "h", true }),
-    { { "h", true }, {"[", true }, {"BP", false}, { "]", true }, {"m", true}, {"(", true}, {"REL", false}, {")", true} }
+    { { "h", true }, {"[", true }, {"BP", false}, { "]", true }, {"m", true}, {"(", true}, {"REL", false}, {")", true}, { ";", true } }
   },
 
-  //M -> m(<REL>)<PR>
+  //M -> m(<REL>)<PR>;
   //{"m"}
   { std::pair<Termino, Termino>({ "M", false }, { "m", true }),
-    { { "m", true }, {"(", true}, {"REL", false}, {")", true}, {"PR", false} }
+    { { "m", true }, {"(", true}, {"REL", false}, {")", true}, {"PR", false}, { ";", true } }
   },
-
+  
   // I -> i(<REL>)<PR>e<PR>
   //{"i"}
   { std::pair<Termino, Termino>({ "I", false }, { "i", true }),
-    { { "i", true }, {"(", true }, { "REL", false}, { ")", true }, { "PR", false}, {"e", true}, {"PR", false} }
+    { { "i", true }, {"(", true }, { "REL", false}, { ")", true }, { "PR", false}, { "I", true } }
   },
+  { std::pair<Termino, Termino>({ "I", false }, { "e", true }),
+    { { "e", true }, { "(", true }, { "REL", false}, { ")", true }, { "PR", false} }
+  },
+  { std::pair<Termino, Termino>({ "I", false }, { "]", true }),
+    { { "3", true } }
+  },
+  
 
   //<REL> -> E<OR>E
   //{"(", "a", "n", "c", "@"}
@@ -481,13 +489,13 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
   //E' -> +TE'
   //{"+"}
   { std::pair<Termino, Termino>({ "E'", false }, { "+", true }),
-    { {"T", false}, { "E'", false } }
+    { { "+", true }, {"T", false}, { "E'", false } }
   },
 
   //E' -> -TE'
   //{"-"}
   { std::pair<Termino, Termino>({ "E'", false }, { "-", true }),
-    { {"T", false}, { "E'", false } }
+    { { "-", true }, {"T", false}, { "E'", false } }
   },
 
   //E' -> 3
@@ -625,6 +633,11 @@ const std::map<std::pair<Termino, Termino>, std::vector<Termino>> Parser::reglas
   // e , e
   { std::pair<Termino, Termino>({ "e", true }, { "e", true }),
     { { "e", true } }
+  },
+
+  // m , m
+  { std::pair<Termino, Termino>({ "m", true }, { "m", true }),
+    { { "m", true } }
   },
 
   // ( , (

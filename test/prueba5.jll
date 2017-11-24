@@ -1,9 +1,12 @@
-cadena = "abcd";
-
-
-
-
-
-
-
+ENT principal(ENT x, ENT y)
+    [
+	ENT c;
+	c = x MAS y;
+	SI( c> 10) [
+	    LEE x;
+	]
+	SINO (c == 5) [
+	     ESCRIBE "FUEGO!";
+	]
+]
 
