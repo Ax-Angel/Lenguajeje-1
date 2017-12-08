@@ -23,6 +23,7 @@ private:
   std::vector<_Token> tablaTokens;
   std::map<std::string, int> tablaCadenasConstantes;
   std::map<std::string, int> tablaIdentificadores;
+  std::map<std::string, std::string> tablaTipos;
   // Átomos que provienen de clases que pueden parsearse de una única forma.
   static const std::map<Clase, Termino> atomosTipoA;
   // Átomos que provienen de clases que pueden parsearse de diversas formas.
@@ -34,10 +35,12 @@ public:
   
   int agregarCadenaConstante(std::string cadenaConstante);
   int agregarIdentificador(std::string identificador);
+  void agregarTipo(std::string s, std::string t);
   void agregarToken(Token& token);
   void imprimeIdentificador();
   void imprimeCadenaConstante();
   void imprimeTablaTokens();
+  void traducirC();
   std::vector<Termino> obtenerCadenaDeAtomos();
 };
 

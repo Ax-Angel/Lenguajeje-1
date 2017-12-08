@@ -107,9 +107,8 @@ void Tabla::imprimeIdentificador(){
   std::cout << '\n' << "TABLA DE SIMBOLOS\nPosicion\tNombre\tTipo\n";
 
   for(auto const &i: tablaIdentificadores){
-    std::cout << i.second << "\t\t" <<i.first << std::endl;
+    std::cout << i.second << "\t\t" << i.first << "\t" << (tablaTipos.count(i.first) ? tablaTipos[i.first] : "*") << std::endl;
   }
-
 }
 
 void Tabla::imprimeCadenaConstante(){
@@ -118,8 +117,6 @@ void Tabla::imprimeCadenaConstante(){
   for(auto const &i: tablaCadenasConstantes){
     std::cout << i.second << "\t\t" <<i.first << std::endl;
   }
-
-
 }
 
 void Tabla::imprimeTablaTokens(){
@@ -141,4 +138,16 @@ std::vector<Termino> Tabla::obtenerCadenaDeAtomos() {
   }
 
   return cadenaDeAtomos;
+}
+
+void Tabla::agregarTipo(std::string s, std::string t) {
+  auto it = Tabla::tablaTipos.find(s);
+
+  if (it == Tabla::tablaTipos.end()) {
+    Tabla::tablaTipos[s] = (t == "t" ? "ENT" : "REAL");
+  }
+}
+
+void Tabla::traducirC() {
+
 }

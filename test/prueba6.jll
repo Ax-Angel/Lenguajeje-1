@@ -1,0 +1,28 @@
+ENT func (ENT a, REAL b)
+[
+	ENT x;
+	x = a + b;
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,9 +1,16 @@
 ENT inicio() [
+    ENT a;
+    REAL b;
+    ENT c;
+    REAL x, u, v, w;
+    
     LEE a, b, c;
 
     ESCRIBE "abc";
     ESCRIBE "valor x: ", x;
 ]
+
+
 
 
 

@@ -176,8 +176,6 @@ ApuntadorAToken Lexer::leerSimboloEspecial() {
   else if (simbolo[0] == '=') {
     return std::make_shared<TokenAsignacion>(posicionActual, lineaActual, columnaActual);
   }
-
-  // El operador o símbolo especial no se encontró. Regresar error.
   
   std::string mensajeError = "Error en operador o símbolo especial: '";
   mensajeError += simbolo[0] + "', "
@@ -195,15 +193,21 @@ ApuntadorAToken Lexer::leerIdentificador() {
     identificador += ultimoCaracter;
     leerCaracter();
   }
+
+  id = identificador;
   
   return std::make_shared<TokenIdentificador>(identificador, posicionActual, lineaActual, columnaActual, tabla->agregarIdentificador(identificador));
 }
 
 const std::map<std::string, OperadorAritmetico> Lexer::operadorAritmetico = {
   { "DIVIDE", OPERADORARITMETICO_DIVISION },
+  { "/", OPERADORARITMETICO_DIVISION },
   { "MAS", OPERADORARITMETICO_SUMA },
+  { "+", OPERADORARITMETICO_SUMA },
   { "MENOS", OPERADORARITMETICO_RESTA },
-  { "MULTIPLICA", OPERADORARITMETICO_MULTIPLICACION }
+  { "-", OPERADORARITMETICO_RESTA },
+  { "MULTIPLICA", OPERADORARITMETICO_MULTIPLICACION },
+  { "*", OPERADORARITMETICO_MULTIPLICACION }
 };
 
 const std::map<std::string, PalabraReservada> Lexer::palabraReservada = {
@@ -224,7 +228,11 @@ ApuntadorAToken Lexer::leerPalabraReservada() {
   //Cuando se termina de leer la palabra, se compara si pertenece a las palabras reservadas
   //o  los operadores aritméticos. Si no coincide con ninguna de las dos clases, se genera un error
 
-  while (isupper(ultimoCaracter)) {
+  while (isupper(ultimoCaracter) ||
+	 ultimoCaracter == '+' ||
+	 ultimoCaracter == '/' ||
+	 ultimoCaracter == '-' ||
+	 ultimoCaracter == '*') {
     palabra += ultimoCaracter;
     leerCaracter();
   }
@@ -289,6 +297,14 @@ ApuntadorAToken Lexer::obtenerSiguienteToken() {
     return tokenActual = leerCadena();
   }
 
+  // El lexema es algún operador aritmético
+  if (ultimoCaracter == '+' ||
+      ultimoCaracter == '-' ||
+      ultimoCaracter == '*' ||
+      ultimoCaracter == '/') {
+    return tokenActual = leerPalabraReservada();
+  }
+  
   // El lexema inicia con un símbolo de puntuación de C, así
   // puede corresponder a alguna de las siguientes clases:
   //

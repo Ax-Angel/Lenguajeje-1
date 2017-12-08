@@ -1,12 +1,13 @@
 /*
-	Analizador Léxico
-	Creado por: Mateo Torres Ruiz y Ángel Rodríguez Mendoza
-	Proyecto para la asignatura de Compiladores 2018-1 Grupo 2
- */
+  Analizador Léxico
+  Creado por: Mateo Torres Ruiz y Ángel Rodríguez Mendoza
+  Proyecto para la asignatura de Compiladores 2018-1 Grupo 2
+*/
 
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <queue>
 
 #include "lexer.hpp"
 #include "parser.hpp"
@@ -26,6 +27,9 @@ void sanitize (char* file) {
   out.close();
 }
 
+void closeClean (char *file) {
+}
+
 int main (int argc, char* argv[]) {
   sanitize(argv[1]);
   std::ifstream file(argv[1]);
@@ -42,16 +46,53 @@ int main (int argc, char* argv[]) {
 
     tabla -> agregarToken(t);
   }
+
+  std::queue<std::string> atomos;
+  std::queue<std::string> programa; 
+  
+  std::cout << "\nCadena de átomos: ";
+  auto v = tabla -> obtenerCadenaDeAtomos();
+  for (Termino t : v) {
+    std::cout << t.identificador << " ";
+    atomos.push(t.identificador);
+  }
+  std::cout << "\n";
+  Parser p(v);
+  bool _b = p.consumirAtomos(false);
+
+  if (_b) {
+    lexer.reset();
+
+    std::ifstream F(argv[1]);
+    std::istream &E(F);
+    std::shared_ptr<Lexer> L(std::make_shared<Lexer>(E));
+    
+    while (true) {
+      auto &t = *L -> obtenerSiguienteToken();
+      
+      if(E.peek() == EOF){
+	break;
+      }
+
+      auto atomo = atomos.front(); atomos.pop();
+      
+      if (atomo == "t" || atomo == "r") {
+
+	while (true) {
+	  t = *L -> obtenerSiguienteToken();
+	  auto _atomo = atomos.front(); atomos.pop();
+	  if (_atomo == ";" || _atomo == "(") break;
+	  if (_atomo == ",") continue;
+	  std::string S = L -> id;
+	  tabla -> agregarTipo(S, atomo);
+	}
+      }
+    }
+  }
   
   tabla -> imprimeIdentificador();
   tabla -> imprimeCadenaConstante();
   tabla -> imprimeTablaTokens();
-
-  std::cout << "\nCadena de átomos: ";
-  auto v = tabla -> obtenerCadenaDeAtomos();
-  for (Termino t : v) std::cout << t.identificador << " ";
-  std::cout << "\n";
-  Parser p(v); p.consumirAtomos(false);
   
   return 0;
 }

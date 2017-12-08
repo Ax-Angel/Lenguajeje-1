@@ -54,6 +54,8 @@ class Lexer {
 public:
   Lexer(std::istream &entrada = std::cin);
 
+  std::string id;
+  
   ApuntadorAToken obtenerTokenActual() const;
 
   void descartarToken();
