@@ -234,7 +234,7 @@ int main (int argc, char* argv[]) {
       else if (atomo == "!") { programaC += " !="; }
       else if (atomo == ",") { programaC += " ,"; }
       else if (atomo == "(") { programaC += "("; }
-      else if (atomo == ")") { programaC += ") "; }
+      else if (atomo == ")") { programaC += ")"; }
       else if (atomo == "+") { programaC += " +"; }
       else if (atomo == "-") { programaC += " -"; }
       else if (atomo == "*") { programaC += " *"; }

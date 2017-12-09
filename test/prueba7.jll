@@ -19,11 +19,14 @@ ENT principal()
    SINO
 	ESCRIBE "HOLA";
 
-   $$@a(a,a);
+   @a(a,a);
    
 ]
   REAL otrafuncion() [ a=3;]
 $$Fin de programa
+
+
+
 
 
 
