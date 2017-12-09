@@ -8,7 +8,7 @@ principal()
     SI(x <= 50) [
         ESCRIBE "x es menor que 50", x;
     ] SINO [
-        LEE x;
+        LEE x, y;
     ]
 
     reloj = 60;
@@ -18,6 +18,32 @@ principal()
 
 $$ Esto es un comentario
 $$ Programa sumamente modificado!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

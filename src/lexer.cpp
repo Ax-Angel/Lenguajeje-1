@@ -79,6 +79,7 @@ ApuntadorAToken Lexer::leerCadena() {
   }
 
   cadena += '"';
+  id = cadena;
   leerCaracter();
 
   return std::make_shared<TokenConstanteCadena>(cadena, posicionActual, lineaActual, columnaActual, tabla->agregarCadenaConstante(cadena));
