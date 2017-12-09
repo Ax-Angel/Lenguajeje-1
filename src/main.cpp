@@ -41,6 +41,7 @@ int main (int argc, char* argv[]) {
   sanitize(argv[1]);
   std::ifstream file(argv[1]);
   std::istream &entrada(file);
+  //int contCadena = 0;
   
   std::shared_ptr<Lexer> lexer(std::make_shared<Lexer>(entrada));
   
@@ -78,66 +79,142 @@ int main (int argc, char* argv[]) {
       auto &t = *L -> obtenerSiguienteToken();
       
       if(E.peek() == EOF){
-	break;
+	     break;
       }
 
       auto atomo = atomos.front(); atomos.pop();
       
       if (atomo == "t" || atomo == "r") {
-	programaC += (atomo == "t") ? "int " : "float ";
+	     programaC += (atomo == "t") ? "int" : "float";
 	
-	while (true) {
-	  t = *L -> obtenerSiguienteToken();
-	  auto _atomo = atomos.front(); atomos.pop();
+      	while (true) {
+      	  t = *L -> obtenerSiguienteToken();
+      	  auto _atomo = atomos.front(); atomos.pop();
 
-	  if (_atomo == ";" || _atomo == "(") {
-	    programaC += _atomo + " ";
-	    break;
-	  }
-	  
-	  if (_atomo == ",") {
-	    programaC += ", ";
-	    continue;
-	  }
+      	 if (_atomo == ";") {
+      	    programaC += _atomo + "\n";
+      	    break;
+      	  }
 
-	  std::string S = L -> id;
-	  tabla -> agregarTipo(S, atomo);
-	  programaC += S + " ";
-	}
-      }
+          if ( _atomo == "(" ){
+            programaC += _atomo + " ";
+            break;
+          }
+      	  
+      	  if (_atomo == ",") {
+      	    programaC += ",";
+      	    continue;
+      	  }
+
+      	  std::string S = L -> id;
+      	  tabla -> agregarTipo(S, atomo);
+      	  programaC += " " + S;
+      	}
+    }
       else if (atomo == "n") {
-	programaC += std::to_string((int)t.obtenerValor()) + " ";
+	programaC += " " + std::to_string((int)t.obtenerValor());
       }
       else if (atomo == "c") {
-	programaC += std::to_string(t.obtenerValor()) + "f ";
+	programaC += std::to_string(t.obtenerValor()) + "f";
       }
       else if (atomo == "a") {
-	std::string S = L -> id;
-	programaC += S + " ";
+      	std::string S = L -> id;
+      	programaC += " " + S;
       }
-      else if (atomo == "s") { }
+      else if (atomo == "s") { 
+        std::string S = L -> id;
+        programaC += S;
+      }
       else if (atomo == "[") {
-	programaC += "{ ";
+	programaC += "{\n";
       }
       else if (atomo == "]") {
-	programaC += "} ";
+	programaC += "\n}";
       }
-      else if (atomo == "w") { }
-      else if (atomo == "l") { }
-      else if (atomo == "h") { }
-      else if (atomo == "m") { }
-      else if (atomo == "i") { }
-      else if (atomo == "e") { }
-      else if (atomo == ">") { programaC += "> "; }
-      else if (atomo == "<") { programaC += "< "; }
-      else if (atomo == "g") { programaC += ">= "; }
-      else if (atomo == "p") { programaC += "<= "; }
-      else if (atomo == "q") { programaC += "== "; }
-      else if (atomo == "!") { programaC += "!= "; }
+      else if (atomo == "w") {
+        programaC += "printf(";
+
+        while(true){
+        t = *L -> obtenerSiguienteToken();
+        auto _atomo = atomos.front(); atomos.pop();
+        
+        if (_atomo == "s") {
+            std::string S = L -> id;
+            programaC += S;
+            continue;
+          }
+
+        if (_atomo == "n") {
+          programaC += " " + std::to_string((int)t.obtenerValor());
+          continue;
+        }
+
+        if (_atomo == "c") {
+          programaC += std::to_string(t.obtenerValor()) + "f";
+          continue;
+        }
+
+        if (_atomo == "a") {
+          std::string S = L -> id;
+          programaC += S;
+          continue;
+        }
+
+        if (_atomo == ",") {
+            programaC += ", ";
+            continue;
+          }
+
+        if (_atomo == ";") {
+            programaC += ");\n";
+            break;
+          }
+        }
+       }
+
+      else if (atomo == "l") { 
+
+        programaC += "scanf(\"";
+        std::string ident = "";
+
+        while(true){
+          t = *L -> obtenerSiguienteToken();
+          auto _atomo = atomos.front(); atomos.pop();
+
+          if (_atomo == "a") {
+            std::string S = L -> id;
+            ident += ", &" + S;
+            programaC += "\%d "; 
+            continue;
+          }
+
+          if (_atomo == ";") {
+              programaC += "\"" + ident + ");\n";
+              break;
+            }
+
+        }
+      }
+      else if (atomo == "h") { programaC += "do\n"; }
+      else if (atomo == "m") { programaC += "while"; }
+      else if (atomo == "i") { programaC += "if"; }
+      else if (atomo == "e") { programaC += "else\n"; }
+      else if (atomo == ";") { programaC += ";\n"; }
       else if (atomo == ",") { programaC += ", "; }
-      else if (atomo == ";") { programaC += "; "; }
-      else if (atomo == "(") { programaC += "( "; }
+      else if (atomo == "=") { programaC += " ="; }
+      else if (atomo == ">") { programaC += " >"; }
+      else if (atomo == "<") { programaC += " <"; }
+      else if (atomo == "g") { programaC += " >="; }
+      else if (atomo == "p") { programaC += " <="; }
+      else if (atomo == "q") { programaC += " =="; }
+      else if (atomo == "!") { programaC += " !="; }
+      else if (atomo == ",") { programaC += " ,"; }
+      else if (atomo == "(") { programaC += "("; }
       else if (atomo == ")") { programaC += ") "; }
+      else if (atomo == "+") { programaC += " +"; }
+      else if (atomo == "-") { programaC += " -"; }
+      else if (atomo == "*") { programaC += " *"; }
+      else if (atomo == "/") { programaC += " /"; }
       else if (atomo == "@") { }
     }
   }
