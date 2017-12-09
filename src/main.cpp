@@ -220,8 +220,8 @@ int main (int argc, char* argv[]) {
   }
   
   tabla -> imprimeIdentificador();
-  tabla -> imprimeCadenaConstante();
-  tabla -> imprimeTablaTokens();
+  //tabla -> imprimeCadenaConstante();
+  //tabla -> imprimeTablaTokens(); solo necesitamos mostrar la tabla de simbolos
   outputCFile(programaC);
   
   return 0;
