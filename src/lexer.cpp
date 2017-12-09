@@ -100,7 +100,8 @@ const std::map<std::string, int> Lexer::simboloEspecial = {
   { "[", int('[') },
   { "]", int(']') },
   { "(", int('(') },
-  { ")", int(')') }
+  { ")", int(')') },
+  { "@", int('@') }
 };
 
 ApuntadorAToken Lexer::leerSimboloEspecial() {
