@@ -28,7 +28,23 @@ void sanitize (char* file) {
   out.close();
 }
 
-void closeClean (char *file) { }
+void closeClean (char *file) {
+  std::ifstream fstr(file);
+  std::vector<std::string> vecStrings;
+  std::string s;
+
+  while (getline(fstr, s)) {
+    vecStrings.push_back(s);
+  }
+  fstr.close();
+
+  std::ofstream fstOut(file);
+  for (std::vector<std::string>::iterator it = vecStrings.begin(); it != vecStrings.end(); ++it) {
+    if (it != vecStrings.begin())
+      fstOut << "\n";
+    fstOut << *it;
+  }
+}
 
 void outputCFile (std::string s) {
   std::ofstream cFile;
@@ -247,6 +263,7 @@ int main (int argc, char* argv[]) {
   //tabla -> imprimeCadenaConstante();
   //tabla -> imprimeTablaTokens(); solo necesitamos mostrar la tabla de simbolos
   outputCFile(programaC);
+  closeClean(argv[1]);
   
   return 0;
 }
