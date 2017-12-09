@@ -74,6 +74,10 @@ int main (int argc, char* argv[]) {
     std::ifstream F(argv[1]);
     std::istream &E(F);
     std::shared_ptr<Lexer> L(std::make_shared<Lexer>(E));
+
+    std::string funcionActual;
+    bool agregarIdFuncion = true;
+    int __func = 0;
     
     while (true) {
       auto &t = *L -> obtenerSiguienteToken();
@@ -109,8 +113,15 @@ int main (int argc, char* argv[]) {
       	  std::string S = L -> id;
       	  tabla -> agregarTipo(S, atomo);
       	  programaC += " " + S;
-      	}
-    }
+
+	  if (agregarIdFuncion) {
+	    funcionActual = S;
+	    agregarIdFuncion = false;
+	  }
+
+	  tabla -> agregarFuncionAsociada(S, funcionActual);
+	}
+      }
       else if (atomo == "n") {
 	programaC += " " + std::to_string((int)t.obtenerValor());
       }
@@ -120,6 +131,13 @@ int main (int argc, char* argv[]) {
       else if (atomo == "a") {
       	std::string S = L -> id;
       	programaC += " " + S;
+
+	if (agregarIdFuncion) {
+	  funcionActual = S;
+	  agregarIdFuncion = false;
+	}
+
+	tabla -> agregarFuncionAsociada(S, funcionActual);
       }
       else if (atomo == "s") { 
         std::string S = L -> id;
@@ -127,9 +145,15 @@ int main (int argc, char* argv[]) {
       }
       else if (atomo == "[") {
 	programaC += "{\n";
+	__func++;
       }
       else if (atomo == "]") {
 	programaC += "\n}";
+	__func--;
+
+	if (__func == 0) {
+	  agregarIdFuncion = true;
+	}
       }
       else if (atomo == "w") {
         programaC += "printf(";

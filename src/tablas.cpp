@@ -104,10 +104,10 @@ void Tabla::agregarToken(Token& token) {
 }
 
 void Tabla::imprimeIdentificador(){
-  std::cout << '\n' << "TABLA DE SIMBOLOS\nPosicion\tNombre\tTipo\n";
+  std::cout << '\n' << "TABLA DE SIMBOLOS\nPosicion\t\tNombre\t\tFuncion\t\tTipo\n";
 
   for(auto const &i: tablaIdentificadores){
-    std::cout << i.second << "\t\t" << i.first << "\t" << (tablaTipos.count(i.first) ? tablaTipos[i.first] : "ERROR el identificador " + i.first + " no tiene tipo") << std::endl;
+    std::cout << i.second << "\t\t\t" << i.first << "\t\t" << (tablaFunciones.count(i.first) ? tablaFunciones[i.first] : "-") << "\t\t" << (tablaTipos.count(i.first) ? tablaTipos[i.first] : "ERROR: El identificador " + i.first + " no tiene tipo.") << "\n";
   }
 }
 
@@ -148,6 +148,10 @@ void Tabla::agregarTipo(std::string s, std::string t) {
   }
 }
 
-void Tabla::traducirC() {
+void Tabla::agregarFuncionAsociada(std::string s, std::string f) {
+  auto it = Tabla::tablaFunciones.find(s);
 
+  if (it == Tabla::tablaFunciones.end()) {
+    Tabla::tablaFunciones[s] = f;
+  }
 }
