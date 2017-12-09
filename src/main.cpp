@@ -8,6 +8,7 @@
 #include <iostream>
 #include <memory>
 #include <queue>
+#include <string>
 
 #include "lexer.hpp"
 #include "parser.hpp"
@@ -27,7 +28,13 @@ void sanitize (char* file) {
   out.close();
 }
 
-void closeClean (char *file) {
+void closeClean (char *file) { }
+
+void outputCFile (std::string s) {
+  std::ofstream cFile;
+  cFile.open("a.c");
+  cFile << s << "\n";
+  cFile.close();
 }
 
 int main (int argc, char* argv[]) {
@@ -48,7 +55,7 @@ int main (int argc, char* argv[]) {
   }
 
   std::queue<std::string> atomos;
-  std::queue<std::string> programa; 
+  std::string programaC; 
   
   std::cout << "\nCadena de átomos: ";
   auto v = tabla -> obtenerCadenaDeAtomos();
@@ -77,22 +84,68 @@ int main (int argc, char* argv[]) {
       auto atomo = atomos.front(); atomos.pop();
       
       if (atomo == "t" || atomo == "r") {
-
+	programaC += (atomo == "t") ? "int " : "float ";
+	
 	while (true) {
 	  t = *L -> obtenerSiguienteToken();
 	  auto _atomo = atomos.front(); atomos.pop();
-	  if (_atomo == ";" || _atomo == "(") break;
-	  if (_atomo == ",") continue;
+
+	  if (_atomo == ";" || _atomo == "(") {
+	    programaC += _atomo + " ";
+	    break;
+	  }
+	  
+	  if (_atomo == ",") {
+	    programaC += ", ";
+	    continue;
+	  }
+
 	  std::string S = L -> id;
 	  tabla -> agregarTipo(S, atomo);
+	  programaC += S + " ";
 	}
       }
+      else if (atomo == "n") {
+	programaC += std::to_string((int)t.obtenerValor()) + " ";
+      }
+      else if (atomo == "c") {
+	programaC += std::to_string(t.obtenerValor()) + "f ";
+      }
+      else if (atomo == "a") {
+	std::string S = L -> id;
+	programaC += S + " ";
+      }
+      else if (atomo == "s") { }
+      else if (atomo == "[") {
+	programaC += "{ ";
+      }
+      else if (atomo == "]") {
+	programaC += "} ";
+      }
+      else if (atomo == "w") { }
+      else if (atomo == "l") { }
+      else if (atomo == "h") { }
+      else if (atomo == "m") { }
+      else if (atomo == "i") { }
+      else if (atomo == "e") { }
+      else if (atomo == ">") { programaC += "> "; }
+      else if (atomo == "<") { programaC += "< "; }
+      else if (atomo == "g") { programaC += ">= "; }
+      else if (atomo == "p") { programaC += "<= "; }
+      else if (atomo == "q") { programaC += "== "; }
+      else if (atomo == "!") { programaC += "!= "; }
+      else if (atomo == ",") { programaC += ", "; }
+      else if (atomo == ";") { programaC += "; "; }
+      else if (atomo == "(") { programaC += "( "; }
+      else if (atomo == ")") { programaC += ") "; }
+      else if (atomo == "@") { }
     }
   }
   
   tabla -> imprimeIdentificador();
   tabla -> imprimeCadenaConstante();
   tabla -> imprimeTablaTokens();
+  outputCFile(programaC);
   
   return 0;
 }
