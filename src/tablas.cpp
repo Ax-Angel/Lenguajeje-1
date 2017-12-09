@@ -107,7 +107,7 @@ void Tabla::imprimeIdentificador(){
   std::cout << '\n' << "TABLA DE SIMBOLOS\nPosicion\tNombre\tTipo\n";
 
   for(auto const &i: tablaIdentificadores){
-    std::cout << i.second << "\t\t" << i.first << "\t" << (tablaTipos.count(i.first) ? tablaTipos[i.first] : "*") << std::endl;
+    std::cout << i.second << "\t\t" << i.first << "\t" << (tablaTipos.count(i.first) ? tablaTipos[i.first] : "ERROR el identificador " + i.first + " no tiene tipo") << std::endl;
   }
 }
 
